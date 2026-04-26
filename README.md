@@ -157,13 +157,7 @@ uv run python ../scripts/check_gpu.py
 cd ..
 ```
 
-For a GTX 1050 Ti or another 4 GB GPU:
-
-```bash
-BATCH_SIZE=100 ./scripts/run_matrix_gpu.sh
-```
-
-For larger GPUs:
+For large GPUs:
 
 ```bash
 BATCH_SIZE=500 ./scripts/run_matrix_gpu.sh
