@@ -1,0 +1,14 @@
+batch_size: 64
+learning_rate: 0.001
+lr_scheduler: constant
+n_layers: 2
+
+layer_0: torch.nn.Linear
+dim_0: 256
+activation_0: torch.nn.LeakyReLU
+dropout_0: 0.4
+
+layer_1: torch.nn.Linear
+dim_1: 64
+activation_1: torch.nn.LeakyReLU
+dropout_1: 0.4

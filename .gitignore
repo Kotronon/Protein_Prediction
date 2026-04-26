@@ -1,0 +1,30 @@
+.DS_Store
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Hugging Face / model caches if created inside the repo
+.cache/
+huggingface/
+
+# UdonPred generated outputs
+UdonPred/checkpoints/
+UdonPred/optimised_parameters/
+UdonPred/wandb/
+UdonPred/data/*/hf/
+outputs/
+results/
+!results/
+results/*
+!results/udonpred_matrix/
+results/udonpred_matrix/*
+!results/udonpred_matrix/*.csv

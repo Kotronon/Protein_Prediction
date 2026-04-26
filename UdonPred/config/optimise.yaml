@@ -1,0 +1,68 @@
+#https://huggingface.co/docs/transformers/hpo_train?backends=Optuna
+
+fp16: 
+  type: categorical
+  values: [False]
+
+learning_rate: 
+  type: float
+  values: [0.0001, 0.01]
+
+batch_size: 
+  type: int
+  values: [1, 128]
+
+lr_scheduler: 
+  type: categorical
+  values: [cosine, reduce_lr_on_plateau, constant] #linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup, inverse_sqrt, reduce_lr_on_plateau, cosine_with_min_lr, warmup_stable_decay,
+
+#TODO: Choose optimiser https://colab.research.google.com/github/PacktPublishing/Hyperparameter-Tuning-with-Python/blob/main/09_Hyperparameter-Tuning-via-Optuna.ipynb#scrollTo=bd94274e-87a8-43bd-8b2a-0df892b28b6d
+
+num_layers: 
+  type: int
+  values: [1, 3]
+
+# Layer types can be any PyTorch module class path
+layer_type: 
+  type: categorical
+  values: [torch.nn.Linear, model.layers.CNNLayer]
+
+layer_size: 
+  type: int
+  values: [4, 2048]
+
+# Layer-specific parameters
+# For each layer type, specify any parameters beyond the required (input_dim, output_dim)
+# Use dicts with "type" and "values" keys for hyperparameters to be suggested
+layer_params:
+  torch.nn.Linear: {}
+  model.layers.CNNLayer:
+    kernel_size: 
+      type: categorical
+      values: [3, 5, 7, 9, 15, 21]
+
+activation_type:
+  type: categorical
+  values: [torch.nn.LeakyReLU, torch.nn.ReLU, torch.nn.Tanh, null]
+
+dropout_rate: 
+  type: float
+  values: [0., 1.]
+
+lora:
+  finetune: 
+    type: bool
+    values: [False]
+  r: 
+    type: int
+    values: [4, 16]
+  lora_alpha: 
+    type: int
+    values: [1, 16]
+  lora_dropout: 
+    type: float
+    values: [0.0, 1.0]
+
+
+
+

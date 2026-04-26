@@ -1,0 +1,57 @@
+# General settings
+cuda_devices: 0
+run_name: trizod
+
+deepspeed_zero: False
+
+# Training configuration
+num_train_epochs: 200
+early_stopping: 20
+checkpoint: False
+
+# Logging and evaluation
+logging:
+  logging_steps: 5
+  eval_steps: 10
+  eval_strategy: steps
+
+# Model saving
+saving:
+  save_steps: 10
+
+# Weights & Biases integration
+wandb:
+  project: UdonPred
+  log_model: checkpoint
+
+# Model architecture parameters
+input_dim: 1024
+output_dim: 1
+max_single_batch_size: 2
+heads: ["out"]
+pre: {"out": []}
+#post: {"out": []}
+post: {"out": [[torch.nn.Sigmoid, {}]]}
+outputs: ["out_-1"]
+
+# Data processing
+cluster: False
+filter: False
+
+# Hyperparameter configuration
+hyperparameter_path: config/architecture.yaml
+
+# Backbone model configuration
+backbone:
+  name: "Rostlab/ProstT5_fp16" 
+  tokeniser_type: "T5Tokenizer"
+  model_type: "T5EncoderModel"
+  prefix_token: "<AA2fold>" 
+  preprocessing_batch_size: 1
+
+# Optimization configuration
+optim:
+  backend: optuna
+  n_trials: 2
+  timeout: 72000
+  direction: minimize
