@@ -42,6 +42,13 @@ def read_results(input_dir: Path) -> dict[str, list[float]]:
             lines = handle.readlines()
 
         protein_id = lines[0].strip().lstrip(">")
+        
+        # TriZOD FASTA IDs need format conversion: "11011111" -> "11011_1_1_1"
+        # Only apply if ID is 7-8 digits (TriZOD format)
+        if len(protein_id) >= 7 and protein_id.isdigit():
+            base_len = len(protein_id) - 3
+            protein_id = protein_id[:base_len] + "_" + "_".join(protein_id[base_len:])
+        
         scores = []
         for line in lines[1:]:
             line = line.strip()
