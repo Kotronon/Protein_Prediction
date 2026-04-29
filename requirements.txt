@@ -2,6 +2,8 @@ biopython
 datasets
 ipykernel
 ipywidgets
+matplotlib
+numpy
 onnx
 onnxruntime
 onnxscript
@@ -13,8 +15,10 @@ psutil
 py3dmol
 pyyaml
 scikit-learn
+scipy
 seaborn
 sentencepiece
+sklearn
 torch
 torchmetrics
 transformers==4.54.0

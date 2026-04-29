@@ -28,3 +28,6 @@ results/*
 !results/udonpred_matrix/
 results/udonpred_matrix/*
 !results/udonpred_matrix/*.csv
+!results/simple_baselines/
+results/simple_baselines/*
+!results/simple_baselines/*.csv

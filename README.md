@@ -143,6 +143,32 @@ To include bootstrap standard deviations:
 python scripts/run_udonpred_matrix.py --skip-predictions --bootstrap-samples 100
 ```
 
+## Simple Baselines
+
+Before interpreting the UdonPred matrix, run lightweight baselines that estimate
+how much signal is available from trivial sequence features:
+
+```bash
+python scripts/run_simple_baselines.py
+```
+
+This writes:
+
+```text
+results/simple_baselines/matrix.csv
+```
+
+The script evaluates:
+
+- `aa_composition_logreg`: balanced logistic regression on global amino acid
+  composition, trained separately on each UdonPred training dataset.
+- `coil_propensity`: a train-independent per-residue Chou-Fasman-style coil
+  propensity heuristic.
+
+The output uses the same metric convention as the UdonPred matrix: Spearman for
+continuous datasets, AP/AUROC for DisProt, and negated CheZOD/pLDDT labels so
+higher scores consistently mean more disorder.
+
 ## GPU Workflow
 
 For another computer with an NVIDIA GPU, use:
