@@ -119,6 +119,29 @@ TURN_PROPENSITY = {
     "Y": 1.14,
 }
 
+# For Hydrophobicity baseline we use the Kyle-Doolottle-scale (https://resources.qiagenbioinformatics.com/manuals/clcgenomicsworkbench/650/Hydrophobicity_scales.html#:~:text=The%20Kyte%2DDoolittle%20scale%20is%20a%20hydrophobicity%20scale,used%20for%20detecting%20hydrophobic%20regions%20in%20proteins.)
+HYDROPHOBICITY = {
+    "A": 1.8,
+    "C": 2.5,
+    "D": -3.5,
+    "E": -3.5,
+    "F": 2.8,
+    "G": -0.4,
+    "H": -3.2,
+    "I": 4.5,
+    "K": -3.9,
+    "L": 3.8,
+    "M": 1.9,
+    "N": -3.5,
+    "P": -1.6,
+    "Q": -3.5,
+    "R": -4.5,
+    "S": -0.8,
+    "T": -0.7,
+    "V": 4.2,
+    "W": -0.9,
+    "Y": -1.3,
+}
 
 @dataclass(frozen=True)
 class ProteinRecord:
@@ -363,6 +386,27 @@ def plot_matrix_heatmap(matrix: dict[str, dict[str, float]], path: Path) -> None
     plt.savefig(path)
     plt.show()
 
+def predict_random(records: Iterable[ProteinRecord], rng: np.random.Generator) -> list[np.ndarray]:
+    return [
+        rng.random(len(record.sequence))
+        for record in records
+    ]
+
+def hydrophobicity_propensity(sequence: str, window: int) -> np.ndarray:
+    """Compute a weak disorder-like score from local Kyte-Doolittle hydrophobicity."""
+    hydro = np.asarray([HYDROPHOBICITY.get(aa, 0.0) for aa in sequence.upper()], dtype=np.float64,)
+    # Smooth local hydrophobicity so the score behaves like a small-window
+    # predictor rather than independent residue lookup.
+    # Kyte-Doolittle: auround -4.5 to +4.5.
+    # interpret higher hydrophobicity as more order, then invert and rescale to get a disorder-like score between 0 and 1.
+    hydro = smooth(hydro, window)
+    disorder_score = (4.5 - hydro) / 9.0
+    return np.clip(disorder_score, 0.0, 1.0)
+
+def predict_hydrophobicity_propensity(records: Iterable[ProteinRecord], window: int) -> list[np.ndarray]:
+    return [hydrophobicity_propensity(record.sequence, window) for record in records]
+
+
 """Parse command-line arguments for the script, providing defaults and help messages for each option."""
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -412,7 +456,7 @@ def main() -> None:
 
         row: dict[str, str | float] = {
             "baseline": "aa_composition_logreg",
-            "train_dataset": train_dataset,
+            "train_dataset": f"{train_dataset}_composition",
         }
         for test_dataset in DATASETS:
             predictions = predict_composition_model(model, test_records[test_dataset])
@@ -421,13 +465,31 @@ def main() -> None:
 
     coil_row: dict[str, str | float] = {
         "baseline": "coil_propensity",
-        "train_dataset": "none",
+        "train_dataset": "none_coil",
     }
     for test_dataset in DATASETS:
         predictions = predict_coil_propensity(test_records[test_dataset], args.coil_window)
         coil_row.update(evaluate(test_records[test_dataset], predictions, test_dataset))
     rows.append(coil_row)
 
+    random_row: dict[str, str | float] = {
+        "baseline": "random",
+        "train_dataset": "none_random",
+    }
+    for test_dataset in DATASETS:
+        predictions = predict_random(test_records[test_dataset], rng)
+        random_row.update(evaluate(test_records[test_dataset], predictions, test_dataset))
+    rows.append(random_row)
+    
+    hydro_row: dict[str, str | float] = {
+        "baseline": "hydrophobicity_propensity",
+        "train_dataset": "none_hydro",
+    }
+    for test_dataset in DATASETS:
+        predictions = predict_hydrophobicity_propensity(test_records[test_dataset], args.coil_window)
+        hydro_row.update(evaluate(test_records[test_dataset], predictions, test_dataset))
+    rows.append(hydro_row)
+    
     matrix_path = output_dir / "matrix.csv"
     write_matrix_csv(rows, matrix_path)
     plot_matrix_heatmap(
