@@ -169,6 +169,20 @@ The output uses the same metric convention as the UdonPred matrix: Spearman for
 continuous datasets, AP/AUROC for DisProt, and negated CheZOD/pLDDT labels so
 higher scores consistently mean more disorder.
 
+## Annotation Ceiling
+
+Estimate agreement between real annotations for proteins that overlap across
+UdonPred evaluation datasets:
+
+```bash
+python scripts/estimate_annotation_ceiling.py --output-dir results/annotation_ceiling
+```
+
+This writes `annotation_ceiling_summary.csv`,
+`annotation_ceiling_summary.json`, and `overlap_details.csv`. The output is an
+inter-annotation agreement estimate, not model performance and not a
+shuffled-label baseline.
+
 ## GPU Workflow
 
 For another computer with an NVIDIA GPU, use:
