@@ -218,6 +218,7 @@ def train_model(
     save_steps: int | None,
     eval_steps: int | None,
     wandb_mode: str,
+    training_hf_cache_dir: Path | None,
     force: bool,
 ) -> Path:
     run_name = f"shuffled_seed_{seed}_{dataset}"
@@ -238,6 +239,11 @@ def train_model(
     else:
         env["CUDA_VISIBLE_DEVICES"] = str(cuda_devices)
         env.pop("UDONPRED_FORCE_CPU", None)
+    if training_hf_cache_dir is not None:
+        training_hf_cache_dir.mkdir(parents=True, exist_ok=True)
+        env["UDONPRED_HF_CACHE_ROOT"] = str(training_hf_cache_dir.resolve())
+    else:
+        env.pop("UDONPRED_HF_CACHE_ROOT", None)
 
     config_dir = write_training_config(
         udonpred_dir,
@@ -737,6 +743,21 @@ def parse_args() -> argparse.Namespace:
         help="Recompute saved embeddings even when a matching cache exists.",
     )
     parser.add_argument(
+        "--training-hf-cache-dir",
+        type=Path,
+        default=None,
+        help=(
+            "Shared UdonPred processed training-dataset cache. Defaults to "
+            "<output-dir>/training_hf_cache so shuffled-label seeds reuse "
+            "sequence embeddings while labels are refreshed from each seed's JSONL."
+        ),
+    )
+    parser.add_argument(
+        "--no-training-hf-cache",
+        action="store_true",
+        help="Disable the shared processed training cache and write per-seed data/*/hf caches.",
+    )
+    parser.add_argument(
         "--include-training-test-split",
         action="store_true",
         help=(
@@ -778,6 +799,15 @@ def main() -> None:
     args = parse_args()
     udonpred_dir = resolve_udonpred_dir(args.udonpred_dir)
     output_dir = args.output_dir.resolve()
+    training_hf_cache_dir = (
+        None
+        if args.no_training_hf_cache
+        else (
+            args.training_hf_cache_dir.resolve()
+            if args.training_hf_cache_dir is not None
+            else output_dir / "training_hf_cache"
+        )
+    )
 
     for seed in args.seeds:
         seed_dir = output_dir / f"seed_{seed}"
@@ -823,6 +853,7 @@ def main() -> None:
                     save_steps=args.save_steps,
                     eval_steps=args.eval_steps,
                     wandb_mode=args.wandb_mode,
+                    training_hf_cache_dir=training_hf_cache_dir,
                     force=args.force,
                 )
                 export_head(udonpred_dir, checkpoint, weights_dir, dataset, force=args.force)
