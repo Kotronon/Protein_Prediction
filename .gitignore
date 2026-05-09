@@ -31,3 +31,7 @@ results/udonpred_matrix/*
 !results/simple_baselines/
 results/simple_baselines/*
 !results/simple_baselines/*.csv
+!results/annotation_ceiling/
+!results/annotation_ceiling/*
+!results/annotation_ceiling_mmseqs/
+

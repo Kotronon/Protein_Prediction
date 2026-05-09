@@ -181,7 +181,26 @@ python scripts/estimate_annotation_ceiling.py --output-dir results/annotation_ce
 This writes `annotation_ceiling_summary.csv`,
 `annotation_ceiling_summary.json`, and `overlap_details.csv`. The output is an
 inter-annotation agreement estimate, not model performance and not a
-shuffled-label baseline.
+shuffled-label baseline. The script also writes PNG plots for overlap size,
+continuous-pair Spearman agreement, and DisProt agreement.
+
+To add MMseqs2 local-alignment ceilings at multiple identity thresholds:
+
+```bash
+python scripts/estimate_annotation_ceiling.py \
+  --use-mmseqs \
+  --output-dir results/annotation_ceiling_mmseqs
+```
+
+This keeps the exact-match ceiling and adds `mmseqs_100`, `mmseqs_98`,
+`mmseqs_95`, `mmseqs_90`, `mmseqs_85`, and `mmseqs_80` comparison levels by
+default. MMseqs hits must pass the identity threshold, at least 80% aligned
+coverage on both proteins, and the normal minimum comparable-residue filter.
+Only aligned residue pairs without gaps are compared. Use
+`--mmseqs-identities` and `--mmseqs-min-coverage` to change those cutoffs. The
+MMseqs run also writes threshold-comparison plots such as
+`ceiling_mmseqs_overlap_by_identity.png` and
+`ceiling_mmseqs_primary_agreement_by_identity.png`.
 
 ## GPU Workflow
 
