@@ -1,0 +1,71 @@
+train_dataset,test_metric,udon_score,baseline_score,annotation_ceiling,raw_headroom,available_headroom,normalized_headroom,status,test_dataset,ceiling_metric,ceiling_source,ceiling_pair,match_mode,n_residues_compared
+trizod,trizod,0.507853,0.273706,1.000000,0.234147,0.726294,0.322386,ok,trizod,spearman,diagonal,trizod vs trizod,diagonal,
+trizod,chezod,0.707732,0.536459,0.481978,0.171273,-0.054481,,ceiling_not_above_baseline,chezod,spearman,annotation_overlap,trizod vs chezod,sequence,138.000000
+trizod,softdis,0.257050,0.270916,0.481151,-0.013866,0.210235,-0.065955,ok,softdis,spearman,annotation_overlap,trizod vs softdis,sequence,563.000000
+trizod,pdbflex,-0.005696,0.196044,0.174514,-0.201740,-0.021530,,ceiling_not_above_baseline,pdbflex,spearman,annotation_overlap,trizod vs pdbflex,sequence,525.000000
+trizod,atlas,0.412662,0.304284,,0.108378,,,missing_ceiling,atlas,spearman,missing,,,
+trizod,plddt,0.718810,0.328734,0.504646,0.390076,0.175912,2.217450,ok,plddt,spearman,annotation_overlap,trizod vs plddt,sequence,283.000000
+trizod,"disprot
+(AP)",0.898505,0.639465,,0.259040,,,missing_ceiling,disprot,average_precision,missing,,,
+trizod,"disprot
+(AUROC)",0.929508,0.753995,,0.175513,,,missing_ceiling,disprot,auroc,missing,,,
+chezod,trizod,0.486243,0.273706,0.481978,0.212537,0.208272,1.020478,ok,trizod,spearman,annotation_overlap,trizod vs chezod,sequence,138.000000
+chezod,chezod,0.691124,0.536459,1.000000,0.154665,0.463541,0.333660,ok,chezod,spearman,diagonal,chezod vs chezod,diagonal,
+chezod,softdis,0.234814,0.270916,0.332540,-0.036102,0.061624,-0.585843,ok,softdis,spearman,annotation_overlap,chezod vs softdis,sequence,72.000000
+chezod,pdbflex,-0.038872,0.196044,,-0.234916,,,missing_ceiling,pdbflex,spearman,missing,,,
+chezod,atlas,0.326703,0.304284,0.220828,0.022419,-0.083456,,ceiling_not_above_baseline,atlas,spearman,annotation_overlap,chezod vs atlas,sequence,372.000000
+chezod,plddt,0.713062,0.328734,0.691031,0.384328,0.362297,1.060809,ok,plddt,spearman,annotation_overlap,chezod vs plddt,sequence,1385.000000
+chezod,"disprot
+(AP)",0.889928,0.639465,,0.250463,,,missing_ceiling,disprot,average_precision,missing,chezod vs disprot,sequence,465.000000
+chezod,"disprot
+(AUROC)",0.925150,0.753995,,0.171155,,,missing_ceiling,disprot,auroc,missing,chezod vs disprot,sequence,465.000000
+softdis,trizod,0.470177,0.273706,0.481151,0.196471,0.207445,0.947099,ok,trizod,spearman,annotation_overlap,trizod vs softdis,sequence,563.000000
+softdis,chezod,0.536943,0.536459,0.332540,0.000484,-0.203919,,ceiling_not_above_baseline,chezod,spearman,annotation_overlap,chezod vs softdis,sequence,72.000000
+softdis,softdis,0.499879,0.270916,1.000000,0.228963,0.729084,0.314042,ok,softdis,spearman,diagonal,softdis vs softdis,diagonal,
+softdis,pdbflex,0.149685,0.196044,0.077090,-0.046359,-0.118954,,ceiling_not_above_baseline,pdbflex,spearman,annotation_overlap,softdis vs pdbflex,sequence,123212.000000
+softdis,atlas,0.596582,0.304284,0.315038,0.292298,0.010754,27.180398,ok,atlas,spearman,annotation_overlap,softdis vs atlas,id+sequence,1558.000000
+softdis,plddt,0.784314,0.328734,0.656777,0.455580,0.328043,1.388781,ok,plddt,spearman,annotation_overlap,softdis vs plddt,sequence,2521.000000
+softdis,"disprot
+(AP)",0.872120,0.639465,0.557933,0.232655,-0.081532,,ceiling_not_above_baseline,disprot,average_precision,annotation_overlap,softdis vs disprot,sequence,2642.000000
+softdis,"disprot
+(AUROC)",0.917547,0.753995,0.929907,0.163552,0.175912,0.929738,ok,disprot,auroc,annotation_overlap,softdis vs disprot,sequence,2642.000000
+pdbflex,trizod,0.286765,0.273706,0.174514,0.013059,-0.099192,,ceiling_not_above_baseline,trizod,spearman,annotation_overlap,trizod vs pdbflex,sequence,525.000000
+pdbflex,chezod,0.285551,0.536459,,-0.250908,,,missing_ceiling,chezod,spearman,missing,,,
+pdbflex,softdis,0.291659,0.270916,0.077090,0.020743,-0.193826,,ceiling_not_above_baseline,softdis,spearman,annotation_overlap,softdis vs pdbflex,sequence,123212.000000
+pdbflex,pdbflex,0.395383,0.196044,1.000000,0.199339,0.803956,0.247948,ok,pdbflex,spearman,diagonal,pdbflex vs pdbflex,diagonal,
+pdbflex,atlas,0.349231,0.304284,0.111006,0.044947,-0.193278,,ceiling_not_above_baseline,atlas,spearman,annotation_overlap,pdbflex vs atlas,sequence,2587.000000
+pdbflex,plddt,0.519823,0.328734,0.011500,0.191089,-0.317234,,ceiling_not_above_baseline,plddt,spearman,annotation_overlap,pdbflex vs plddt,sequence,1412.000000
+pdbflex,"disprot
+(AP)",0.519235,0.639465,0.069130,-0.120230,-0.570335,,ceiling_not_above_baseline,disprot,average_precision,annotation_overlap,pdbflex vs disprot,sequence,2335.000000
+pdbflex,"disprot
+(AUROC)",0.737309,0.753995,0.307951,-0.016686,-0.446044,,ceiling_not_above_baseline,disprot,auroc,annotation_overlap,pdbflex vs disprot,sequence,2335.000000
+atlas,trizod,0.399847,0.273706,,0.126141,,,missing_ceiling,trizod,spearman,missing,,,
+atlas,chezod,0.594801,0.536459,0.220828,0.058342,-0.315631,,ceiling_not_above_baseline,chezod,spearman,annotation_overlap,chezod vs atlas,sequence,372.000000
+atlas,softdis,0.309795,0.270916,0.315038,0.038879,0.044122,0.881170,ok,softdis,spearman,annotation_overlap,softdis vs atlas,id+sequence,1558.000000
+atlas,pdbflex,0.055761,0.196044,0.111006,-0.140283,-0.085038,,ceiling_not_above_baseline,pdbflex,spearman,annotation_overlap,pdbflex vs atlas,sequence,2587.000000
+atlas,atlas,0.708063,0.304284,1.000000,0.403779,0.695716,0.580379,ok,atlas,spearman,diagonal,atlas vs atlas,diagonal,
+atlas,plddt,0.718784,0.328734,0.295052,0.390050,-0.033682,,ceiling_not_above_baseline,plddt,spearman,annotation_overlap,atlas vs plddt,sequence,424.000000
+atlas,"disprot
+(AP)",0.870035,0.639465,,0.230570,,,missing_ceiling,disprot,average_precision,missing,,,
+atlas,"disprot
+(AUROC)",0.920100,0.753995,,0.166105,,,missing_ceiling,disprot,auroc,missing,,,
+plddt,trizod,0.422638,0.273706,0.504646,0.148932,0.230940,0.644895,ok,trizod,spearman,annotation_overlap,trizod vs plddt,sequence,283.000000
+plddt,chezod,0.624582,0.536459,0.691031,0.088123,0.154572,0.570110,ok,chezod,spearman,annotation_overlap,chezod vs plddt,sequence,1385.000000
+plddt,softdis,0.283637,0.270916,0.656777,0.012721,0.385861,0.032968,ok,softdis,spearman,annotation_overlap,softdis vs plddt,sequence,2521.000000
+plddt,pdbflex,0.103985,0.196044,0.011500,-0.092059,-0.184544,,ceiling_not_above_baseline,pdbflex,spearman,annotation_overlap,pdbflex vs plddt,sequence,1412.000000
+plddt,atlas,0.512167,0.304284,0.295052,0.207883,-0.009232,,ceiling_not_above_baseline,atlas,spearman,annotation_overlap,atlas vs plddt,sequence,424.000000
+plddt,plddt,0.838924,0.328734,1.000000,0.510190,0.671266,0.760041,ok,plddt,spearman,diagonal,plddt vs plddt,diagonal,
+plddt,"disprot
+(AP)",0.874971,0.639465,,0.235506,,,missing_ceiling,disprot,average_precision,missing,,,
+plddt,"disprot
+(AUROC)",0.927180,0.753995,,0.173185,,,missing_ceiling,disprot,auroc,missing,,,
+disprot,trizod,0.364121,0.273706,,0.090415,,,missing_ceiling,trizod,spearman,missing,,,
+disprot,chezod,0.663372,0.536459,,0.126913,,,missing_ceiling,chezod,spearman,missing,chezod vs disprot,sequence,465.000000
+disprot,softdis,0.254746,0.270916,0.488921,-0.016170,0.218005,-0.074173,ok,softdis,spearman,annotation_overlap,softdis vs disprot,sequence,2642.000000
+disprot,pdbflex,0.098709,0.196044,-0.151455,-0.097335,-0.347499,,ceiling_not_above_baseline,pdbflex,spearman,annotation_overlap,pdbflex vs disprot,sequence,2335.000000
+disprot,atlas,0.623971,0.304284,,0.319687,,,missing_ceiling,atlas,spearman,missing,,,
+disprot,plddt,0.774079,0.328734,,0.445345,,,missing_ceiling,plddt,spearman,missing,,,
+disprot,"disprot
+(AP)",0.935162,0.639465,1.000000,0.295697,0.360535,0.820162,ok,disprot,average_precision,diagonal,disprot vs disprot,diagonal,
+disprot,"disprot
+(AUROC)",0.958705,0.753995,1.000000,0.204710,0.246005,0.832138,ok,disprot,auroc,diagonal,disprot vs disprot,diagonal,

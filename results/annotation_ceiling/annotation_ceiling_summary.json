@@ -21,7 +21,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.5181362343850325,
+    "value": 0.5181362343850324,
     "threshold_used": 0.5,
     "notes": "CheZOD labels negated following existing project convention"
   },
@@ -73,7 +73,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.6533026903021547,
+    "value": 0.6533026903021546,
     "threshold_used": 0.5,
     "notes": ""
   },
@@ -190,7 +190,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.37905598685714176,
+    "value": 0.3790559868571417,
     "threshold_used": 0.5,
     "notes": "pLDDT converted to disorder score as 1 - pLDDT / 100"
   },
@@ -255,7 +255,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.28465896982674693,
+    "value": 0.2846589698267469,
     "threshold_used": 0.5,
     "notes": "CheZOD labels negated following existing project convention"
   },
@@ -320,7 +320,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.40931269591221486,
+    "value": 0.40931269591221475,
     "threshold_used": 0.5,
     "notes": "CheZOD labels negated following existing project convention"
   },
@@ -372,7 +372,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.6944186111680657,
+    "value": 0.6944186111680658,
     "threshold_used": 0.5,
     "notes": "pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention"
   },
@@ -476,7 +476,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.07324597755598986,
+    "value": 0.07324597755598984,
     "threshold_used": 0.5,
     "notes": ""
   },
@@ -580,7 +580,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.716291195624533,
+    "value": 0.7162911956245328,
     "threshold_used": 0.5,
     "notes": "pLDDT converted to disorder score as 1 - pLDDT / 100"
   },
@@ -684,7 +684,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.006635388517930228,
+    "value": 0.006635388517930231,
     "threshold_used": 0.5,
     "notes": ""
   },

@@ -175,7 +175,7 @@ Estimate agreement between real annotations for proteins that overlap across
 UdonPred evaluation datasets:
 
 ```bash
-python scripts/estimate_annotation_ceiling.py --output-dir results/annotation_ceiling
+UdonPred/.venv/bin/python scripts/estimate_annotation_ceiling.py --output-dir results/annotation_ceiling
 ```
 
 This writes `annotation_ceiling_summary.csv`,
@@ -201,6 +201,21 @@ Only aligned residue pairs without gaps are compared. Use
 MMseqs run also writes threshold-comparison plots such as
 `ceiling_mmseqs_overlap_by_identity.png` and
 `ceiling_mmseqs_primary_agreement_by_identity.png`.
+
+## Normalized Headroom
+
+After the UdonPred matrix, simple baselines, and annotation ceiling are ready,
+compute normalized headroom:
+
+```bash
+UdonPred/.venv/bin/python scripts/compute_normalized_headroom.py
+```
+
+This writes reusable CSVs to `results/normalized_headroom/`, including
+`normalized_headroom_vs_best_simple_baseline.csv`, `cell_status.csv`, and the
+seed-13 shuffled-label null summaries. The primary formula is
+`(UdonPred - best_simple_baseline) / (annotation_ceiling - best_simple_baseline)`.
+Missing off-diagonal annotation ceilings remain blank.
 
 ## GPU Workflow
 
