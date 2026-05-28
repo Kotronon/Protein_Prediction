@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
+import importlib.util
 import json
 import math
 import os
@@ -20,12 +22,15 @@ import subprocess
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable, Iterator
 
+import numpy as np
 import pandas as pd
 import torch
 import yaml
+from scipy.ndimage import gaussian_filter1d
 from torchmetrics.functional import auroc, average_precision, spearman_corrcoef
+from tqdm import tqdm
 
 
 DATASETS = ["trizod", "chezod", "softdis", "pdbflex", "atlas", "plddt", "disprot"]
@@ -95,6 +100,7 @@ def prepare_shuffled_dataset(
     dataset: str,
     seed: int,
     force: bool,
+    include_training_test_split: bool,
 ) -> Path:
     source_dir = udonpred_dir / "data" / dataset
     target_dir = output_dir / f"seed_{seed}" / "data" / dataset
@@ -111,15 +117,24 @@ def prepare_shuffled_dataset(
         train_target,
         seed=seed,
     )
-    for name in ["valid.jsonl", "valid.fasta", "test.jsonl", "test.fasta"]:
+    copy_names = ["valid.jsonl", "valid.fasta"]
+    if include_training_test_split:
+        copy_names += ["test.jsonl", "test.fasta"]
+
+    for name in copy_names:
         source = source_dir / name
         if source.exists():
             shutil.copy2(source, target_dir / name)
 
+    split_note = (
+        "with test split"
+        if include_training_test_split
+        else "without test split for training cache efficiency"
+    )
     print(
         f"Prepared shuffled {dataset} seed {seed}: "
         f"{summary['records']} records, {summary['valid_labels']} valid labels, "
-        f"{summary['masked_labels']} masked labels"
+        f"{summary['masked_labels']} masked labels; {split_note}"
     )
     return target_dir
 
@@ -203,6 +218,7 @@ def train_model(
     save_steps: int | None,
     eval_steps: int | None,
     wandb_mode: str,
+    training_hf_cache_dir: Path | None,
     force: bool,
 ) -> Path:
     run_name = f"shuffled_seed_{seed}_{dataset}"
@@ -223,6 +239,11 @@ def train_model(
     else:
         env["CUDA_VISIBLE_DEVICES"] = str(cuda_devices)
         env.pop("UDONPRED_FORCE_CPU", None)
+    if training_hf_cache_dir is not None:
+        training_hf_cache_dir.mkdir(parents=True, exist_ok=True)
+        env["UDONPRED_HF_CACHE_ROOT"] = str(training_hf_cache_dir.resolve())
+    else:
+        env.pop("UDONPRED_HF_CACHE_ROOT", None)
 
     config_dir = write_training_config(
         udonpred_dir,
@@ -296,11 +317,18 @@ def export_head(udonpred_dir: Path, checkpoint_dir: Path, weights_dir: Path, dat
     return target
 
 
+def has_checkpoint_and_head(seed: int, dataset: str, udonpred_dir: Path, seed_dir: Path) -> bool:
+    checkpoint_root = udonpred_dir / "checkpoints" / f"shuffled_seed_{seed}_{dataset}"
+    return select_checkpoint(checkpoint_root) is not None and (seed_dir / "weights" / f"{dataset}.onnx").exists()
+
+
 def read_results(input_dir: Path) -> dict[str, list[float]]:
     results = {}
     for path in sorted(input_dir.glob("*.caid")):
         with path.open(encoding="utf-8") as handle:
             lines = handle.readlines()
+        if not lines:
+            raise ValueError(f"Empty prediction file: {path}")
         protein_id = lines[0].strip().lstrip(">")
         if len(protein_id) >= 7 and protein_id.isdigit():
             base_len = len(protein_id) - 3
@@ -308,6 +336,202 @@ def read_results(input_dir: Path) -> dict[str, list[float]]:
         scores = [float(line.strip().split("\t")[2]) for line in lines[1:] if line.strip()]
         results[protein_id] = scores
     return results
+
+
+def load_predict_module(udonpred_dir: Path) -> Any:
+    spec = importlib.util.spec_from_file_location("udonpred_predict", udonpred_dir / "predict.py")
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Could not import {udonpred_dir / 'predict.py'}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def prediction_file_name(header: str) -> str:
+    safe_header = header.replace("/", "_").replace("|", "_")
+    return f"{safe_header}.caid"
+
+
+def write_prediction_file(out_dir: Path, header: str, sequence: str, scores: np.ndarray, predict_module: Any) -> None:
+    file_path = out_dir / prediction_file_name(header)
+    temp_path = file_path.with_name(f"{file_path.name}.tmp")
+    temp_path.write_text(
+        "".join(predict_module.format_predictions(header, sequence, scores)),
+        encoding="utf-8",
+    )
+    temp_path.replace(file_path)
+
+
+def is_complete_prediction_dir(result_dir: Path, entries: list[tuple[str, str]]) -> bool:
+    if not result_dir.exists():
+        return False
+    expected_files = [result_dir / prediction_file_name(header) for header, _ in entries]
+    return all(path.exists() and path.stat().st_size > 0 for path in expected_files)
+
+
+def entries_digest(entries: list[tuple[str, str]]) -> str:
+    digest = hashlib.sha256()
+    for header, sequence in entries:
+        digest.update(header.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(sequence.encode("utf-8"))
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def cached_embedding_batches(
+    cache_root: Path,
+    test_set: str,
+    entries: list[tuple[str, str]],
+    cache_metadata: dict[str, str],
+) -> list[Path] | None:
+    dataset_cache_dir = cache_root / test_set
+    manifest_path = dataset_cache_dir / "manifest.json"
+    if not manifest_path.exists():
+        return None
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+
+    batch_files = [dataset_cache_dir / name for name in manifest.get("batch_files", [])]
+    if (
+        manifest.get("version") != 1
+        or manifest.get("entry_count") != len(entries)
+        or manifest.get("entries_sha256") != entries_digest(entries)
+        or any(manifest.get(key) != value for key, value in cache_metadata.items())
+        or not batch_files
+        or not all(path.exists() for path in batch_files)
+    ):
+        return None
+    return batch_files
+
+
+def save_npz_atomic(path: Path, **arrays: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = path.with_name(f"{path.name}.tmp")
+    with temp_path.open("wb") as handle:
+        np.savez(handle, **arrays)
+    temp_path.replace(path)
+
+
+def remove_cache_tree(path: Path, cache_root: Path) -> None:
+    resolved_path = path.resolve()
+    resolved_root = cache_root.resolve()
+    if resolved_path == resolved_root or resolved_root not in resolved_path.parents:
+        raise ValueError(f"Refusing to remove cache path outside cache root: {path}")
+    shutil.rmtree(resolved_path)
+
+
+def write_embedding_manifest(
+    cache_root: Path,
+    test_set: str,
+    entries: list[tuple[str, str]],
+    batch_files: list[Path],
+    batch_size: int,
+    cache_metadata: dict[str, str],
+) -> None:
+    manifest = {
+        "version": 1,
+        "test_set": test_set,
+        "entry_count": len(entries),
+        "entries_sha256": entries_digest(entries),
+        "batch_size": batch_size,
+        "batch_files": [path.name for path in batch_files],
+        **cache_metadata,
+    }
+    (cache_root / test_set / "manifest.json").write_text(
+        json.dumps(manifest, indent=2),
+        encoding="utf-8",
+    )
+
+
+def iter_computed_embedding_batches(
+    cache_root: Path,
+    test_set: str,
+    entries: list[tuple[str, str]],
+    predict_module: Any,
+    tokenizer: Any,
+    backbone: Any,
+    torch_device: str,
+    batch_size: int,
+    cache_metadata: dict[str, str],
+) -> Iterator[tuple[list[str], list[str], np.ndarray]]:
+    dataset_cache_dir = cache_root / test_set
+    if dataset_cache_dir.exists():
+        remove_cache_tree(dataset_cache_dir, cache_root)
+    dataset_cache_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"Computing and saving embeddings for {test_set} ...")
+    batch_files: list[Path] = []
+    prefix_token_len = 1
+    total_batches = predict_module.count_batches(entries, batch_size)
+
+    with torch.inference_mode():
+        for batch_index, batch in enumerate(
+            tqdm(predict_module.iter_batches(entries, batch_size), total=total_batches)
+        ):
+            headers, seqs = zip(*batch)
+            seqs = list(seqs)
+            max_seq_len = max(len(seq) for seq in seqs)
+
+            input_ids, attention_mask = predict_module.tokenize_batch(tokenizer, seqs, torch_device)
+            hidden = backbone(input_ids, attention_mask=attention_mask).last_hidden_state
+            hidden = hidden * attention_mask.unsqueeze(-1)
+            emb = hidden[:, prefix_token_len : prefix_token_len + max_seq_len, :]
+            emb_np = emb.float().cpu().numpy()
+
+            batch_path = dataset_cache_dir / f"batch_{batch_index:05d}.npz"
+            save_npz_atomic(
+                batch_path,
+                headers_json=np.array(json.dumps(list(headers))),
+                seqs_json=np.array(json.dumps(seqs)),
+                embeddings=emb_np,
+            )
+            batch_files.append(batch_path)
+            yield list(headers), seqs, emb_np
+
+    write_embedding_manifest(cache_root, test_set, entries, batch_files, batch_size, cache_metadata)
+
+
+def load_embedding_batch(path: Path) -> tuple[list[str], list[str], np.ndarray]:
+    with np.load(path) as data:
+        headers = json.loads(str(data["headers_json"].item()))
+        seqs = json.loads(str(data["seqs_json"].item()))
+        embeddings = data["embeddings"]
+    return headers, seqs, embeddings
+
+
+def iter_cached_embedding_batches(batch_files: list[Path]) -> Iterator[tuple[list[str], list[str], np.ndarray]]:
+    for batch_path in tqdm(batch_files):
+        yield load_embedding_batch(batch_path)
+
+
+def apply_heads_to_embedding_batch(
+    seed_dir: Path,
+    test_set: str,
+    active_train_sets: list[str],
+    heads: dict[str, Any],
+    head_io: dict[str, tuple[str, str]],
+    headers: list[str],
+    seqs: list[str],
+    emb_np: np.ndarray,
+    smooth: float,
+    predict_module: Any,
+) -> None:
+    for train_set in active_train_sets:
+        head = heads[train_set]
+        head_input_name, head_output_name = head_io[train_set]
+        scores_batch = head.run([head_output_name], {head_input_name: emb_np})[0]
+        result_dir = seed_dir / "predictions" / f"{train_set}_{test_set}"
+
+        for header, seq, scores in zip(headers, seqs, scores_batch):
+            scores_seq = scores[: len(seq)]
+            if smooth > 0:
+                scores_seq = gaussian_filter1d(
+                    scores_seq.astype(np.float64), sigma=smooth, axis=0
+                )
+            write_prediction_file(result_dir, header, seq, scores_seq, predict_module)
 
 
 def run_predictions(
@@ -318,34 +542,97 @@ def run_predictions(
     batch_size: int,
     smooth: float,
     force: bool,
+    embedding_cache_dir: Path | None,
+    force_embeddings: bool,
 ) -> None:
+    predict_module = load_predict_module(udonpred_dir)
+    torch_device = predict_module.resolve_device(device)
+    torch_dtype = torch.float16 if torch_device == "cuda" else torch.float32
+    cache_root = embedding_cache_dir or (seed_dir.parent / "embeddings")
+    cache_metadata = {
+        "backbone_name": str(predict_module.BACKBONE_NAME),
+        "prefix_token": str(predict_module.PREFIX_TOKEN),
+        "backbone_compute_dtype": str(torch_dtype),
+    }
     weights_dir = seed_dir / "weights"
-    for train_set in datasets:
-        for test_set in DATASETS:
+    heads: dict[str, Any] = {}
+    head_io: dict[str, tuple[str, str]] = {}
+
+    def ensure_heads_loaded(train_sets: list[str]) -> None:
+        for train_set in train_sets:
+            if train_set in heads:
+                continue
+            head = predict_module.load_head(weights_dir / f"{train_set}.onnx", torch_device)
+            heads[train_set] = head
+            head_io[train_set] = (head.get_inputs()[0].name, head.get_outputs()[0].name)
+
+    tokenizer = None
+    backbone = None
+    entries_by_test_set = {
+        test_set: sorted(
+            predict_module.read_fasta(str(udonpred_dir / "data" / test_set / "test.fasta")),
+            key=lambda item: len(item[1]),
+            reverse=True,
+        )
+        for test_set in DATASETS
+    }
+
+    for test_set in DATASETS:
+        entries = entries_by_test_set[test_set]
+
+        active_train_sets = []
+        for train_set in datasets:
             result_dir = seed_dir / "predictions" / f"{train_set}_{test_set}"
-            if result_dir.exists() and any(result_dir.glob("*.caid")) and not force:
-                print(f"Skipping existing predictions: {result_dir}")
+            if is_complete_prediction_dir(result_dir, entries) and not force:
+                print(f"Skipping complete predictions: {result_dir}")
                 continue
             result_dir.mkdir(parents=True, exist_ok=True)
-            run_command(
-                [
-                    "uv",
-                    "run",
-                    "predict.py",
-                    str(udonpred_dir / "data" / test_set / "test.fasta"),
-                    str(weights_dir.resolve()),
-                    "--target",
-                    train_set,
-                    "--output",
-                    str(result_dir.resolve()),
-                    "--device",
-                    device,
-                    "--batch-size",
-                    str(batch_size),
-                    "--smooth",
-                    str(smooth),
-                ],
-                cwd=udonpred_dir,
+            active_train_sets.append(train_set)
+
+        if not active_train_sets:
+            continue
+
+        ensure_heads_loaded(active_train_sets)
+        batch_files = (
+            None
+            if force_embeddings
+            else cached_embedding_batches(cache_root, test_set, entries, cache_metadata)
+        )
+        if batch_files is None:
+            if tokenizer is None:
+                print(f"Loading tokenizer ({predict_module.BACKBONE_NAME}) ...")
+                tokenizer = predict_module.load_tokenizer()
+            if backbone is None:
+                print(f"Loading backbone ({predict_module.BACKBONE_NAME}) ...")
+                backbone = predict_module.load_backbone(torch_device, torch_dtype)
+            embedding_batches = iter_computed_embedding_batches(
+                cache_root,
+                test_set,
+                entries,
+                predict_module,
+                tokenizer,
+                backbone,
+                torch_device,
+                batch_size,
+                cache_metadata,
+            )
+        else:
+            print(f"Using cached embeddings for {test_set}: {cache_root / test_set}")
+            embedding_batches = iter_cached_embedding_batches(batch_files)
+
+        print(f"Predicting {test_set} with heads: {', '.join(active_train_sets)}")
+        for headers, seqs, emb_np in embedding_batches:
+            apply_heads_to_embedding_batch(
+                seed_dir,
+                test_set,
+                active_train_sets,
+                heads,
+                head_io,
+                headers,
+                seqs,
+                emb_np,
+                smooth,
+                predict_module,
             )
 
 
@@ -379,10 +666,14 @@ def load_prediction_frames(
 
 def compute_metrics(frames: dict[str, dict[str, pd.DataFrame]], datasets: list[str]) -> dict[str, dict[str, float]]:
     values: dict[str, dict[str, float]] = defaultdict(dict)
-    for train_set in datasets:
-        for test_set in DATASETS:
+    for test_set in DATASETS:
+        reference_frame = frames[datasets[0]][test_set]
+        labels, mask = flatten_masked(reference_frame["label"].tolist())
+        if test_set in NEGATED_DATASETS:
+            labels = -labels
+
+        for train_set in datasets:
             frame = frames[train_set][test_set]
-            labels, mask = flatten_masked(frame["label"].tolist())
             preds = torch.tensor(
                 [item for row in frame["pred"].tolist() for item in row],
                 dtype=torch.float32,
@@ -390,8 +681,6 @@ def compute_metrics(frames: dict[str, dict[str, pd.DataFrame]], datasets: list[s
 
             if train_set in NEGATED_DATASETS:
                 preds = -preds
-            if test_set in NEGATED_DATASETS:
-                labels = -labels
 
             if test_set == "disprot":
                 binary_labels = labels.to(torch.int)
@@ -436,9 +725,47 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, default=Path("results/udonpred_shuffled_labels"))
     parser.add_argument("--seeds", type=int, nargs="+", default=[13, 14, 15])
     parser.add_argument("--datasets", choices=DATASETS, nargs="+", default=DATASETS)
-    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument("--batch-size", type=int, default=50)
     parser.add_argument("--smooth", type=float, default=1.5)
+    parser.add_argument(
+        "--embedding-cache-dir",
+        type=Path,
+        default=None,
+        help=(
+            "Directory for saved ProstT5 test-set embeddings. Defaults to "
+            "<output-dir>/embeddings, shared by all shuffled seeds."
+        ),
+    )
+    parser.add_argument(
+        "--force-embeddings",
+        action="store_true",
+        help="Recompute saved embeddings even when a matching cache exists.",
+    )
+    parser.add_argument(
+        "--training-hf-cache-dir",
+        type=Path,
+        default=None,
+        help=(
+            "Shared UdonPred processed training-dataset cache. Defaults to "
+            "<output-dir>/training_hf_cache so shuffled-label seeds reuse "
+            "sequence embeddings while labels are refreshed from each seed's JSONL."
+        ),
+    )
+    parser.add_argument(
+        "--no-training-hf-cache",
+        action="store_true",
+        help="Disable the shared processed training cache and write per-seed data/*/hf caches.",
+    )
+    parser.add_argument(
+        "--include-training-test-split",
+        action="store_true",
+        help=(
+            "Copy test.jsonl and test.fasta into shuffled training data directories. "
+            "By default only train/validation files are prepared because evaluation "
+            "uses the original UdonPred test sets."
+        ),
+    )
     parser.add_argument("--train-device", choices=["cpu", "cuda"], default="cpu")
     parser.add_argument("--cuda-devices", default="0")
     parser.add_argument("--num-train-epochs", type=int, default=None)
@@ -472,29 +799,48 @@ def main() -> None:
     args = parse_args()
     udonpred_dir = resolve_udonpred_dir(args.udonpred_dir)
     output_dir = args.output_dir.resolve()
+    training_hf_cache_dir = (
+        None
+        if args.no_training_hf_cache
+        else (
+            args.training_hf_cache_dir.resolve()
+            if args.training_hf_cache_dir is not None
+            else output_dir / "training_hf_cache"
+        )
+    )
 
     for seed in args.seeds:
         seed_dir = output_dir / f"seed_{seed}"
         weights_dir = seed_dir / "weights"
         for dataset in args.datasets:
             shuffled_data_dir = prepare_shuffled_dataset(
-                udonpred_dir, output_dir, dataset, seed, force=args.force
-            )
-            write_training_config(
-                udonpred_dir=udonpred_dir,
-                seed_dir=seed_dir,
-                dataset=dataset,
-                shuffled_data_dir=shuffled_data_dir,
-                run_name=f"shuffled_seed_{seed}_{dataset}",
-                cuda_devices=args.cuda_devices,
-                train_device=args.train_device,
-                num_train_epochs=args.num_train_epochs,
-                save_steps=args.save_steps,
-                eval_steps=args.eval_steps,
+                udonpred_dir,
+                output_dir,
+                dataset,
+                seed,
+                force=args.force,
+                include_training_test_split=args.include_training_test_split,
             )
             if args.prepare_only:
+                write_training_config(
+                    udonpred_dir=udonpred_dir,
+                    seed_dir=seed_dir,
+                    dataset=dataset,
+                    shuffled_data_dir=shuffled_data_dir,
+                    run_name=f"shuffled_seed_{seed}_{dataset}",
+                    cuda_devices=args.cuda_devices,
+                    train_device=args.train_device,
+                    num_train_epochs=args.num_train_epochs,
+                    save_steps=args.save_steps,
+                    eval_steps=args.eval_steps,
+                )
                 continue
             if not args.skip_training:
+                if has_checkpoint_and_head(seed, dataset, udonpred_dir, seed_dir) and not args.force:
+                    print(
+                        "Skipping config rewrite for existing checkpoint and ONNX head: "
+                        f"shuffled_seed_{seed}_{dataset}"
+                    )
                 checkpoint = train_model(
                     udonpred_dir=udonpred_dir,
                     dataset=dataset,
@@ -507,6 +853,7 @@ def main() -> None:
                     save_steps=args.save_steps,
                     eval_steps=args.eval_steps,
                     wandb_mode=args.wandb_mode,
+                    training_hf_cache_dir=training_hf_cache_dir,
                     force=args.force,
                 )
                 export_head(udonpred_dir, checkpoint, weights_dir, dataset, force=args.force)
@@ -528,6 +875,12 @@ def main() -> None:
                 batch_size=args.batch_size,
                 smooth=args.smooth,
                 force=args.force,
+                embedding_cache_dir=(
+                    args.embedding_cache_dir.resolve()
+                    if args.embedding_cache_dir is not None
+                    else None
+                ),
+                force_embeddings=args.force_embeddings,
             )
 
         if args.skip_metrics:

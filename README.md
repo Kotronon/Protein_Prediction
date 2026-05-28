@@ -175,13 +175,47 @@ Estimate agreement between real annotations for proteins that overlap across
 UdonPred evaluation datasets:
 
 ```bash
-python scripts/estimate_annotation_ceiling.py --output-dir results/annotation_ceiling
+UdonPred/.venv/bin/python scripts/estimate_annotation_ceiling.py --output-dir results/annotation_ceiling
 ```
 
 This writes `annotation_ceiling_summary.csv`,
 `annotation_ceiling_summary.json`, and `overlap_details.csv`. The output is an
 inter-annotation agreement estimate, not model performance and not a
-shuffled-label baseline.
+shuffled-label baseline. The script also writes PNG plots for overlap size,
+continuous-pair Spearman agreement, and DisProt agreement.
+
+To add MMseqs2 local-alignment ceilings at multiple identity thresholds:
+
+```bash
+python scripts/estimate_annotation_ceiling.py \
+  --use-mmseqs \
+  --output-dir results/annotation_ceiling_mmseqs
+```
+
+This keeps the exact-match ceiling and adds `mmseqs_100`, `mmseqs_98`,
+`mmseqs_95`, `mmseqs_90`, `mmseqs_85`, and `mmseqs_80` comparison levels by
+default. MMseqs hits must pass the identity threshold, at least 80% aligned
+coverage on both proteins, and the normal minimum comparable-residue filter.
+Only aligned residue pairs without gaps are compared. Use
+`--mmseqs-identities` and `--mmseqs-min-coverage` to change those cutoffs. The
+MMseqs run also writes threshold-comparison plots such as
+`ceiling_mmseqs_overlap_by_identity.png` and
+`ceiling_mmseqs_primary_agreement_by_identity.png`.
+
+## Normalized Headroom
+
+After the UdonPred matrix, simple baselines, and annotation ceiling are ready,
+compute normalized headroom:
+
+```bash
+UdonPred/.venv/bin/python scripts/compute_normalized_headroom.py
+```
+
+This writes reusable CSVs to `results/normalized_headroom/`, including
+`normalized_headroom_vs_best_simple_baseline.csv`, `cell_status.csv`, and the
+seed-13 shuffled-label null summaries. The primary formula is
+`(UdonPred - best_simple_baseline) / (annotation_ceiling - best_simple_baseline)`.
+Missing off-diagonal annotation ceilings remain blank.
 
 ## GPU Workflow
 

@@ -33,3 +33,10 @@ results/simple_baselines/*
 !results/simple_baselines/*.csv
 !results/compare_predictors/*.csv
 !results/compare_predictors_with_seth/*.csv
+!results/annotation_ceiling/
+results/annotation_ceiling/*
+!results/annotation_ceiling/*.csv
+!results/annotation_ceiling/*.json
+!results/normalized_headroom/
+results/normalized_headroom/*
+!results/normalized_headroom/*.csv

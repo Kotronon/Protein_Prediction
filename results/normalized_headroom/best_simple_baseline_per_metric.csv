@@ -1,0 +1,11 @@
+test_metric,best_simple_baseline,best_simple_baseline_train_dataset,best_simple_baseline_score
+trizod,coil_propensity,none_coil,0.273706
+chezod,aa_composition_logreg,disprot_composition,0.536459
+softdis,hydrophobicity_propensity,none_hydro,0.270916
+pdbflex,aa_composition_logreg,pdbflex_composition,0.196044
+atlas,aa_composition_logreg,softdis_composition,0.304284
+plddt,aa_composition_logreg,plddt_composition,0.328734
+"disprot
+(AP)",aa_composition_logreg,chezod_composition,0.639465
+"disprot
+(AUROC)",aa_composition_logreg,trizod_composition,0.753995
