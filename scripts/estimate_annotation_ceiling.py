@@ -1115,7 +1115,15 @@ def main() -> None:
                 )
 
             labels_a, labels_b = flatten_matched_labels(matches, dataset_a, dataset_b)
-            metrics = compute_pair_metrics(labels_a, labels_b, dataset_a, dataset_b, args.threshold)
+            protein_labels_a, protein_labels_b = flatten_matched_protein_labels(
+                matches,
+                dataset_a,
+                dataset_b,
+            )
+            metrics = [
+                *compute_pair_metrics(labels_a, labels_b, dataset_a, dataset_b, args.threshold),
+                *compute_protein_pair_metrics(protein_labels_a, protein_labels_b),
+            ]
             base_notes = []
             if dataset_a == "plddt" or dataset_b == "plddt":
                 base_notes.append("pLDDT converted to disorder score as 1 - pLDDT / 100")

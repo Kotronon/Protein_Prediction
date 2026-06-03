@@ -28,6 +28,26 @@ python scripts/compare_predictors.py \
   --predictor ADOPT=results/human_proteome/ADOPT\
   --predictor metapredict=results/human_proteome/metapredict/metapredict_human_proteome.caid \
   --output-dir results/compare_predictors_with_seth_and_iupred3_and_adopt_and_metapredict   
+  
+  
+  CAID predictors:
+  ESMDisPred: https://github.com/wasicse/ESMDisPred
+  DisoFLAG: https://github.com/YihePang/DisoFLAG
+  DisorderUnetLM
+  flDPnn3
+  PUNCH2: https://github.com/deemeng/punch2
+  
+  python scripts/compare_predictors.py \
+  --predictor trizod=results/human_proteome/UdonPred/trizod \
+  --predictor chezod=results/human_proteome/UdonPred/chezod \
+  --predictor softdis=results/human_proteome/UdonPred/softdis \
+  --predictor pdbflex=results/human_proteome/UdonPred/pdbflex \
+  --predictor atlas=results/human_proteome/UdonPred/atlas \
+  --predictor plddt=results/human_proteome/UdonPred/plddt \
+  --predictor disprot=results/human_proteome/UdonPred/disprot \
+  --predictor ESMDisPred=results/human_proteome/ESMDisPred_max1500/disorder/ESMDisPred-DNN
+  --output-dir results/compare_predictors_with_esmdispred   
+  
 
 """
 

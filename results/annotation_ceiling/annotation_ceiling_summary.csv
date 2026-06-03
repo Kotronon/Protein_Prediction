@@ -1,70 +1,124 @@
-dataset_a,dataset_b,match_mode,n_proteins_overlap,n_residues_compared,annotation_type_a,annotation_type_b,metric,value,threshold_used,notes
-trizod,chezod,sequence,1,138,continuous,continuous,spearman,0.481978,0.5,CheZOD labels negated following existing project convention
-trizod,chezod,sequence,1,138,continuous,continuous,pearson,0.518136,0.5,CheZOD labels negated following existing project convention
-trizod,chezod,sequence,1,138,continuous,continuous,mae,1.759833,0.5,CheZOD labels negated following existing project convention
-trizod,chezod,sequence,1,138,continuous,continuous,rmse,2.086588,0.5,CheZOD labels negated following existing project convention
-trizod,softdis,sequence,6,563,continuous,continuous,spearman,0.481151,0.5,
-trizod,softdis,sequence,6,563,continuous,continuous,pearson,0.653303,0.5,
-trizod,softdis,sequence,6,563,continuous,continuous,mae,0.186306,0.5,
-trizod,softdis,sequence,6,563,continuous,continuous,rmse,0.288937,0.5,
-trizod,pdbflex,sequence,4,525,continuous,continuous,spearman,0.174514,0.5,
-trizod,pdbflex,sequence,4,525,continuous,continuous,pearson,0.215995,0.5,
-trizod,pdbflex,sequence,4,525,continuous,continuous,mae,0.263474,0.5,
-trizod,pdbflex,sequence,4,525,continuous,continuous,rmse,0.781212,0.5,
-trizod,atlas,none,0,0,continuous,continuous,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
-trizod,plddt,sequence,2,283,continuous,continuous,spearman,0.504646,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-trizod,plddt,sequence,2,283,continuous,continuous,pearson,0.379056,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-trizod,plddt,sequence,2,283,continuous,continuous,mae,0.319844,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-trizod,plddt,sequence,2,283,continuous,continuous,rmse,0.446339,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-trizod,disprot,none,0,0,continuous,binary,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
-chezod,softdis,sequence,1,72,continuous,continuous,spearman,0.332540,0.5,CheZOD labels negated following existing project convention
-chezod,softdis,sequence,1,72,continuous,continuous,pearson,0.284659,0.5,CheZOD labels negated following existing project convention
-chezod,softdis,sequence,1,72,continuous,continuous,mae,7.105375,0.5,CheZOD labels negated following existing project convention
-chezod,softdis,sequence,1,72,continuous,continuous,rmse,7.360978,0.5,CheZOD labels negated following existing project convention
-chezod,pdbflex,none,0,0,continuous,continuous,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
-chezod,atlas,sequence,2,372,continuous,continuous,spearman,0.220828,0.5,CheZOD labels negated following existing project convention
-chezod,atlas,sequence,2,372,continuous,continuous,pearson,0.409313,0.5,CheZOD labels negated following existing project convention
-chezod,atlas,sequence,2,372,continuous,continuous,mae,11.955004,0.5,CheZOD labels negated following existing project convention
-chezod,atlas,sequence,2,372,continuous,continuous,rmse,12.198776,0.5,CheZOD labels negated following existing project convention
-chezod,plddt,sequence,12,1385,continuous,continuous,spearman,0.691031,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
-chezod,plddt,sequence,12,1385,continuous,continuous,pearson,0.694419,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
-chezod,plddt,sequence,12,1385,continuous,continuous,mae,4.758991,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
-chezod,plddt,sequence,12,1385,continuous,continuous,rmse,6.459607,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
-chezod,disprot,sequence,1,465,continuous,binary,auroc,,0.5,CheZOD labels negated following existing project convention; AUROC/AP/F1 undefined because binary annotation has one class
-chezod,disprot,sequence,1,465,continuous,binary,average_precision,,0.5,CheZOD labels negated following existing project convention; AUROC/AP/F1 undefined because binary annotation has one class
-chezod,disprot,sequence,1,465,continuous,binary,f1_thresholded,,0.5,CheZOD labels negated following existing project convention; AUROC/AP/F1 undefined because binary annotation has one class
-chezod,disprot,sequence,1,465,continuous,binary,spearman,,0.5,CheZOD labels negated following existing project convention; Spearman undefined because one input has fewer than two values
-softdis,pdbflex,sequence,748,123212,continuous,continuous,spearman,0.077090,0.5,
-softdis,pdbflex,sequence,748,123212,continuous,continuous,pearson,0.073246,0.5,
-softdis,pdbflex,sequence,748,123212,continuous,continuous,mae,0.371777,0.5,
-softdis,pdbflex,sequence,748,123212,continuous,continuous,rmse,1.689196,0.5,
-softdis,atlas,id+sequence,17,1558,continuous,continuous,spearman,0.315038,0.5,
-softdis,atlas,id+sequence,17,1558,continuous,continuous,pearson,0.348152,0.5,
-softdis,atlas,id+sequence,17,1558,continuous,continuous,mae,0.592993,0.5,
-softdis,atlas,id+sequence,17,1558,continuous,continuous,rmse,0.907752,0.5,
-softdis,plddt,sequence,10,2521,continuous,continuous,spearman,0.656777,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-softdis,plddt,sequence,10,2521,continuous,continuous,pearson,0.716291,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-softdis,plddt,sequence,10,2521,continuous,continuous,mae,0.192838,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-softdis,plddt,sequence,10,2521,continuous,continuous,rmse,0.303634,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-softdis,disprot,sequence,8,2642,continuous,binary,auroc,0.929907,0.5,
-softdis,disprot,sequence,8,2642,continuous,binary,average_precision,0.557933,0.5,
-softdis,disprot,sequence,8,2642,continuous,binary,f1_thresholded,0.522782,0.5,
-softdis,disprot,sequence,8,2642,continuous,binary,spearman,0.488921,0.5,
-pdbflex,atlas,sequence,25,2587,continuous,continuous,spearman,0.111006,0.5,
-pdbflex,atlas,sequence,25,2587,continuous,continuous,pearson,0.006635,0.5,
-pdbflex,atlas,sequence,25,2587,continuous,continuous,mae,0.905405,0.5,
-pdbflex,atlas,sequence,25,2587,continuous,continuous,rmse,1.718295,0.5,
-pdbflex,plddt,sequence,6,1412,continuous,continuous,spearman,0.011500,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-pdbflex,plddt,sequence,6,1412,continuous,continuous,pearson,0.088403,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-pdbflex,plddt,sequence,6,1412,continuous,continuous,mae,0.264106,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-pdbflex,plddt,sequence,6,1412,continuous,continuous,rmse,0.729843,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-pdbflex,disprot,sequence,7,2335,continuous,binary,auroc,0.307951,0.5,
-pdbflex,disprot,sequence,7,2335,continuous,binary,average_precision,0.069130,0.5,
-pdbflex,disprot,sequence,7,2335,continuous,binary,f1_thresholded,0.162162,0.5,
-pdbflex,disprot,sequence,7,2335,continuous,binary,spearman,-0.151455,0.5,
-atlas,plddt,sequence,2,424,continuous,continuous,spearman,0.295052,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-atlas,plddt,sequence,2,424,continuous,continuous,pearson,0.514756,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-atlas,plddt,sequence,2,424,continuous,continuous,mae,0.390633,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-atlas,plddt,sequence,2,424,continuous,continuous,rmse,0.455516,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
-atlas,disprot,none,0,0,continuous,binary,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
-plddt,disprot,none,0,0,continuous,binary,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
+dataset_a,dataset_b,comparison_level,match_mode,min_identity,min_coverage,n_proteins_overlap,n_residues_compared,annotation_type_a,annotation_type_b,metric,value,threshold_used,notes
+trizod,chezod,exact,sequence,,,1,138,continuous,continuous,spearman,0.481978,0.5,CheZOD labels negated following existing project convention
+trizod,chezod,exact,sequence,,,1,138,continuous,continuous,pearson,0.518136,0.5,CheZOD labels negated following existing project convention
+trizod,chezod,exact,sequence,,,1,138,continuous,continuous,mae,1.759833,0.5,CheZOD labels negated following existing project convention
+trizod,chezod,exact,sequence,,,1,138,continuous,continuous,rmse,2.086588,0.5,CheZOD labels negated following existing project convention
+trizod,chezod,exact,sequence,,,1,138,continuous,continuous,protein_spearman,,0.5,CheZOD labels negated following existing project convention; protein-level correlation undefined because fewer than two proteins overlap
+trizod,chezod,exact,sequence,,,1,138,continuous,continuous,protein_pearson,,0.5,CheZOD labels negated following existing project convention; protein-level correlation undefined because fewer than two proteins overlap
+trizod,softdis,exact,sequence,,,6,563,continuous,continuous,spearman,0.481151,0.5,
+trizod,softdis,exact,sequence,,,6,563,continuous,continuous,pearson,0.653303,0.5,
+trizod,softdis,exact,sequence,,,6,563,continuous,continuous,mae,0.186306,0.5,
+trizod,softdis,exact,sequence,,,6,563,continuous,continuous,rmse,0.288937,0.5,
+trizod,softdis,exact,sequence,,,6,563,continuous,continuous,protein_spearman,0.657143,0.5,
+trizod,softdis,exact,sequence,,,6,563,continuous,continuous,protein_pearson,0.980855,0.5,
+trizod,softdis,exact,sequence,,,6,563,continuous,continuous,protein_mae,0.081978,0.5,
+trizod,softdis,exact,sequence,,,6,563,continuous,continuous,protein_rmse,0.093457,0.5,
+trizod,pdbflex,exact,sequence,,,4,525,continuous,continuous,spearman,0.174514,0.5,
+trizod,pdbflex,exact,sequence,,,4,525,continuous,continuous,pearson,0.215995,0.5,
+trizod,pdbflex,exact,sequence,,,4,525,continuous,continuous,mae,0.263474,0.5,
+trizod,pdbflex,exact,sequence,,,4,525,continuous,continuous,rmse,0.781212,0.5,
+trizod,pdbflex,exact,sequence,,,4,525,continuous,continuous,protein_spearman,0.400000,0.5,
+trizod,pdbflex,exact,sequence,,,4,525,continuous,continuous,protein_pearson,0.666822,0.5,
+trizod,pdbflex,exact,sequence,,,4,525,continuous,continuous,protein_mae,0.225893,0.5,
+trizod,pdbflex,exact,sequence,,,4,525,continuous,continuous,protein_rmse,0.295891,0.5,
+trizod,atlas,exact,none,,,0,0,continuous,continuous,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
+trizod,plddt,exact,sequence,,,2,283,continuous,continuous,spearman,0.504646,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+trizod,plddt,exact,sequence,,,2,283,continuous,continuous,pearson,0.379056,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+trizod,plddt,exact,sequence,,,2,283,continuous,continuous,mae,0.319844,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+trizod,plddt,exact,sequence,,,2,283,continuous,continuous,rmse,0.446339,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+trizod,plddt,exact,sequence,,,2,283,continuous,continuous,protein_spearman,1.000000,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+trizod,plddt,exact,sequence,,,2,283,continuous,continuous,protein_pearson,1.000000,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+trizod,plddt,exact,sequence,,,2,283,continuous,continuous,protein_mae,0.299942,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+trizod,plddt,exact,sequence,,,2,283,continuous,continuous,protein_rmse,0.408911,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+trizod,disprot,exact,none,,,0,0,continuous,binary,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
+chezod,softdis,exact,sequence,,,1,72,continuous,continuous,spearman,0.332540,0.5,CheZOD labels negated following existing project convention
+chezod,softdis,exact,sequence,,,1,72,continuous,continuous,pearson,0.284659,0.5,CheZOD labels negated following existing project convention
+chezod,softdis,exact,sequence,,,1,72,continuous,continuous,mae,7.105375,0.5,CheZOD labels negated following existing project convention
+chezod,softdis,exact,sequence,,,1,72,continuous,continuous,rmse,7.360978,0.5,CheZOD labels negated following existing project convention
+chezod,softdis,exact,sequence,,,1,72,continuous,continuous,protein_spearman,,0.5,CheZOD labels negated following existing project convention; protein-level correlation undefined because fewer than two proteins overlap
+chezod,softdis,exact,sequence,,,1,72,continuous,continuous,protein_pearson,,0.5,CheZOD labels negated following existing project convention; protein-level correlation undefined because fewer than two proteins overlap
+chezod,pdbflex,exact,none,,,0,0,continuous,continuous,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
+chezod,atlas,exact,sequence,,,2,372,continuous,continuous,spearman,0.220828,0.5,CheZOD labels negated following existing project convention
+chezod,atlas,exact,sequence,,,2,372,continuous,continuous,pearson,0.409313,0.5,CheZOD labels negated following existing project convention
+chezod,atlas,exact,sequence,,,2,372,continuous,continuous,mae,11.955004,0.5,CheZOD labels negated following existing project convention
+chezod,atlas,exact,sequence,,,2,372,continuous,continuous,rmse,12.198776,0.5,CheZOD labels negated following existing project convention
+chezod,atlas,exact,sequence,,,2,372,continuous,continuous,protein_spearman,,0.5,CheZOD labels negated following existing project convention; protein-level correlation undefined because one annotation has fewer than two values
+chezod,atlas,exact,sequence,,,2,372,continuous,continuous,protein_pearson,,0.5,CheZOD labels negated following existing project convention; protein-level correlation undefined because one annotation has fewer than two values
+chezod,plddt,exact,sequence,,,12,1385,continuous,continuous,spearman,0.691031,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
+chezod,plddt,exact,sequence,,,12,1385,continuous,continuous,pearson,0.694419,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
+chezod,plddt,exact,sequence,,,12,1385,continuous,continuous,mae,4.758991,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
+chezod,plddt,exact,sequence,,,12,1385,continuous,continuous,rmse,6.459607,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
+chezod,plddt,exact,sequence,,,12,1385,continuous,continuous,protein_spearman,0.853147,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
+chezod,plddt,exact,sequence,,,12,1385,continuous,continuous,protein_pearson,0.887732,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
+chezod,plddt,exact,sequence,,,12,1385,continuous,continuous,protein_mae,4.184260,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
+chezod,plddt,exact,sequence,,,12,1385,continuous,continuous,protein_rmse,5.692259,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention
+chezod,disprot,exact,sequence,,,1,465,continuous,binary,auroc,,0.5,CheZOD labels negated following existing project convention; AUROC/AP/F1 undefined because binary annotation has one class
+chezod,disprot,exact,sequence,,,1,465,continuous,binary,average_precision,,0.5,CheZOD labels negated following existing project convention; AUROC/AP/F1 undefined because binary annotation has one class
+chezod,disprot,exact,sequence,,,1,465,continuous,binary,f1_thresholded,,0.5,CheZOD labels negated following existing project convention; AUROC/AP/F1 undefined because binary annotation has one class
+chezod,disprot,exact,sequence,,,1,465,continuous,binary,spearman,,0.5,CheZOD labels negated following existing project convention; Spearman undefined because one input has fewer than two values
+chezod,disprot,exact,sequence,,,1,465,continuous,binary,protein_spearman,,0.5,CheZOD labels negated following existing project convention; protein-level correlation undefined because fewer than two proteins overlap
+chezod,disprot,exact,sequence,,,1,465,continuous,binary,protein_pearson,,0.5,CheZOD labels negated following existing project convention; protein-level correlation undefined because fewer than two proteins overlap
+softdis,pdbflex,exact,sequence,,,748,123212,continuous,continuous,spearman,0.077090,0.5,
+softdis,pdbflex,exact,sequence,,,748,123212,continuous,continuous,pearson,0.073246,0.5,
+softdis,pdbflex,exact,sequence,,,748,123212,continuous,continuous,mae,0.371777,0.5,
+softdis,pdbflex,exact,sequence,,,748,123212,continuous,continuous,rmse,1.689196,0.5,
+softdis,pdbflex,exact,sequence,,,748,123212,continuous,continuous,protein_spearman,0.040218,0.5,
+softdis,pdbflex,exact,sequence,,,748,123212,continuous,continuous,protein_pearson,0.048665,0.5,
+softdis,pdbflex,exact,sequence,,,748,123212,continuous,continuous,protein_mae,0.255240,0.5,
+softdis,pdbflex,exact,sequence,,,748,123212,continuous,continuous,protein_rmse,0.575706,0.5,
+softdis,atlas,exact,id+sequence,,,17,1558,continuous,continuous,spearman,0.315038,0.5,
+softdis,atlas,exact,id+sequence,,,17,1558,continuous,continuous,pearson,0.348152,0.5,
+softdis,atlas,exact,id+sequence,,,17,1558,continuous,continuous,mae,0.592993,0.5,
+softdis,atlas,exact,id+sequence,,,17,1558,continuous,continuous,rmse,0.907752,0.5,
+softdis,atlas,exact,id+sequence,,,17,1558,continuous,continuous,protein_spearman,0.487745,0.5,
+softdis,atlas,exact,id+sequence,,,17,1558,continuous,continuous,protein_pearson,0.431118,0.5,
+softdis,atlas,exact,id+sequence,,,17,1558,continuous,continuous,protein_mae,0.642458,0.5,
+softdis,atlas,exact,id+sequence,,,17,1558,continuous,continuous,protein_rmse,0.854034,0.5,
+softdis,plddt,exact,sequence,,,10,2521,continuous,continuous,spearman,0.656777,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+softdis,plddt,exact,sequence,,,10,2521,continuous,continuous,pearson,0.716291,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+softdis,plddt,exact,sequence,,,10,2521,continuous,continuous,mae,0.192838,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+softdis,plddt,exact,sequence,,,10,2521,continuous,continuous,rmse,0.303634,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+softdis,plddt,exact,sequence,,,10,2521,continuous,continuous,protein_spearman,0.696970,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+softdis,plddt,exact,sequence,,,10,2521,continuous,continuous,protein_pearson,0.650692,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+softdis,plddt,exact,sequence,,,10,2521,continuous,continuous,protein_mae,0.143300,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+softdis,plddt,exact,sequence,,,10,2521,continuous,continuous,protein_rmse,0.160430,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+softdis,disprot,exact,sequence,,,8,2642,continuous,binary,auroc,0.929907,0.5,
+softdis,disprot,exact,sequence,,,8,2642,continuous,binary,average_precision,0.557933,0.5,
+softdis,disprot,exact,sequence,,,8,2642,continuous,binary,f1_thresholded,0.522782,0.5,
+softdis,disprot,exact,sequence,,,8,2642,continuous,binary,spearman,0.488921,0.5,
+softdis,disprot,exact,sequence,,,8,2642,continuous,binary,protein_spearman,0.761905,0.5,
+softdis,disprot,exact,sequence,,,8,2642,continuous,binary,protein_pearson,0.989019,0.5,
+softdis,disprot,exact,sequence,,,8,2642,continuous,binary,protein_mae,0.106462,0.5,
+softdis,disprot,exact,sequence,,,8,2642,continuous,binary,protein_rmse,0.120343,0.5,
+pdbflex,atlas,exact,sequence,,,25,2587,continuous,continuous,spearman,0.111006,0.5,
+pdbflex,atlas,exact,sequence,,,25,2587,continuous,continuous,pearson,0.006635,0.5,
+pdbflex,atlas,exact,sequence,,,25,2587,continuous,continuous,mae,0.905405,0.5,
+pdbflex,atlas,exact,sequence,,,25,2587,continuous,continuous,rmse,1.718295,0.5,
+pdbflex,atlas,exact,sequence,,,25,2587,continuous,continuous,protein_spearman,0.144259,0.5,
+pdbflex,atlas,exact,sequence,,,25,2587,continuous,continuous,protein_pearson,0.060739,0.5,
+pdbflex,atlas,exact,sequence,,,25,2587,continuous,continuous,protein_mae,0.704798,0.5,
+pdbflex,atlas,exact,sequence,,,25,2587,continuous,continuous,protein_rmse,1.025766,0.5,
+pdbflex,plddt,exact,sequence,,,6,1412,continuous,continuous,spearman,0.011500,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+pdbflex,plddt,exact,sequence,,,6,1412,continuous,continuous,pearson,0.088403,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+pdbflex,plddt,exact,sequence,,,6,1412,continuous,continuous,mae,0.264106,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+pdbflex,plddt,exact,sequence,,,6,1412,continuous,continuous,rmse,0.729843,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+pdbflex,plddt,exact,sequence,,,6,1412,continuous,continuous,protein_spearman,0.485714,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+pdbflex,plddt,exact,sequence,,,6,1412,continuous,continuous,protein_pearson,0.832239,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+pdbflex,plddt,exact,sequence,,,6,1412,continuous,continuous,protein_mae,0.195648,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+pdbflex,plddt,exact,sequence,,,6,1412,continuous,continuous,protein_rmse,0.305374,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+pdbflex,disprot,exact,sequence,,,7,2335,continuous,binary,auroc,0.307951,0.5,
+pdbflex,disprot,exact,sequence,,,7,2335,continuous,binary,average_precision,0.069130,0.5,
+pdbflex,disprot,exact,sequence,,,7,2335,continuous,binary,f1_thresholded,0.162162,0.5,
+pdbflex,disprot,exact,sequence,,,7,2335,continuous,binary,spearman,-0.151455,0.5,
+pdbflex,disprot,exact,sequence,,,7,2335,continuous,binary,protein_spearman,0.464286,0.5,
+pdbflex,disprot,exact,sequence,,,7,2335,continuous,binary,protein_pearson,0.588328,0.5,
+pdbflex,disprot,exact,sequence,,,7,2335,continuous,binary,protein_mae,0.676296,0.5,
+pdbflex,disprot,exact,sequence,,,7,2335,continuous,binary,protein_rmse,1.514513,0.5,
+atlas,plddt,exact,sequence,,,2,424,continuous,continuous,spearman,0.295052,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+atlas,plddt,exact,sequence,,,2,424,continuous,continuous,pearson,0.514756,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+atlas,plddt,exact,sequence,,,2,424,continuous,continuous,mae,0.390633,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+atlas,plddt,exact,sequence,,,2,424,continuous,continuous,rmse,0.455516,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100
+atlas,plddt,exact,sequence,,,2,424,continuous,continuous,protein_spearman,,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; protein-level correlation undefined because one annotation has fewer than two values
+atlas,plddt,exact,sequence,,,2,424,continuous,continuous,protein_pearson,,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100; protein-level correlation undefined because one annotation has fewer than two values
+atlas,disprot,exact,none,,,0,0,continuous,binary,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
+plddt,disprot,exact,none,,,0,0,continuous,binary,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues
