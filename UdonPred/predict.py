@@ -61,14 +61,22 @@ def format_predictions(
 
 def resolve_device(device: str) -> str:
     if device == "auto":
-        return "cuda" if torch.cuda.is_available() else "cpu"
+        if torch.cuda.is_available():
+            return "cuda"
+        if torch.backends.mps.is_available():
+            return "mps"
+        return "cpu"
     if device == "cuda":
         if not torch.cuda.is_available():
             raise RuntimeError("CUDA requested but not available.")
         return "cuda"
+    if device == "mps":
+        if not torch.backends.mps.is_available():
+            raise RuntimeError("MPS requested but not available.")
+        return "mps"
     if device == "cpu":
         return "cpu"
-    raise ValueError("Device must be one of: auto, cpu, cuda")
+    raise ValueError("Device must be one of: auto, cpu, cuda, mps")
 
 
 def iter_batches(items: List[Tuple[str, str]], max_total_len: int):
@@ -168,7 +176,8 @@ def run_exported(
 ) -> None:
     """Run prediction using the HuggingFace backbone and ONNX prediction head."""
     torch_device = resolve_device(device)
-    torch_dtype = torch.float16 if torch_device == "cuda" else torch.float32
+    torch_dtype = torch.float16 if torch_device in {"cuda", "mps"} else torch.float32
+    print(f"Using device={torch_device}, dtype={torch_dtype}")
 
     prefix_token_len = 1
 
@@ -262,8 +271,8 @@ def main() -> None:
         "-d",
         type=str,
         default="auto",
-        choices=["auto", "cpu", "cuda"],
-        help="Device for inference (auto, cpu, cuda).",
+        choices=["auto", "cpu", "cuda", "mps"],
+        help="Device for inference (auto, cpu, cuda, mps).",
     )
     parser.add_argument(
         "--smooth",

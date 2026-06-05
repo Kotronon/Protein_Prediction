@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Run UdonPred's 7x7 matrix with one backbone pass per test dataset.
+"""Run UdonPred's 7x7 matrix with one backbone pass per dataset split.
 
 The original matrix runner shells out to ``UdonPred/predict.py`` for every
 train/test pair. That is simple, but it recomputes the ProstT5 embeddings 49
 times. This runner keeps the same output layout while computing embeddings once
-per test dataset and applying all ONNX heads to the shared embeddings.
+per target dataset and applying all ONNX heads to the shared embeddings. Use
+``--split valid`` to generate the validation prediction matrix used by ensemble
+notebooks.
 """
 
 from __future__ import annotations
@@ -52,6 +54,7 @@ def write_prediction_file(out_dir: Path, header: str, sequence: str, scores: np.
 def run_predictions_fast(
     udonpred_dir: Path,
     output_dir: Path,
+    split: str,
     device: str,
     batch_size: int,
     smooth: float,
@@ -59,13 +62,15 @@ def run_predictions_fast(
 ) -> None:
     predict_module = load_predict_module(udonpred_dir)
     torch_device = predict_module.resolve_device(device)
-    torch_dtype = torch.float16 if torch_device == "cuda" else torch.float32
+    torch_dtype = torch.float16 if torch_device in {"cuda", "mps"} else torch.float32
+    print(f"Using device={torch_device}, dtype={torch_dtype}")
 
     print(f"Loading tokenizer ({predict_module.BACKBONE_NAME}) ...")
     tokenizer = predict_module.load_tokenizer()
 
     print(f"Loading backbone ({predict_module.BACKBONE_NAME}) ...")
     backbone = predict_module.load_backbone(torch_device, torch_dtype)
+    cpu_backbone = None
 
     weights_dir = udonpred_dir / "weights"
     heads = {
@@ -80,7 +85,7 @@ def run_predictions_fast(
     prefix_token_len = 1
 
     for test_set in DATASETS:
-        entries = predict_module.read_fasta(str(udonpred_dir / "data" / test_set / "test.fasta"))
+        entries = predict_module.read_fasta(str(udonpred_dir / "data" / test_set / f"{split}.fasta"))
         entries = sorted(entries, key=lambda item: len(item[1]), reverse=True)
         expected_count = len(entries)
 
@@ -105,10 +110,24 @@ def run_predictions_fast(
                 max_seq_len = max(len(seq) for seq in seqs)
 
                 input_ids, attention_mask = predict_module.tokenize_batch(tokenizer, seqs, torch_device)
-                hidden = backbone(input_ids, attention_mask=attention_mask).last_hidden_state
+                try:
+                    hidden = backbone(input_ids, attention_mask=attention_mask).last_hidden_state
+                except RuntimeError as exc:
+                    if torch_device != "mps" or "out of memory" not in str(exc).lower():
+                        raise
+                    print("MPS out of memory for batch; retrying this batch on CPU.")
+                    if hasattr(torch.mps, "empty_cache"):
+                        torch.mps.empty_cache()
+                    if cpu_backbone is None:
+                        cpu_backbone = predict_module.load_backbone("cpu", torch.float32)
+                    input_ids, attention_mask = predict_module.tokenize_batch(tokenizer, seqs, "cpu")
+                    hidden = cpu_backbone(input_ids, attention_mask=attention_mask).last_hidden_state
                 hidden = hidden * attention_mask.unsqueeze(-1)
                 emb = hidden[:, prefix_token_len : prefix_token_len + max_seq_len, :]
                 emb_np = emb.float().cpu().numpy()
+                del hidden, emb, input_ids, attention_mask
+                if torch_device == "mps" and hasattr(torch.mps, "empty_cache"):
+                    torch.mps.empty_cache()
 
                 for train_set in active_train_sets:
                     head = heads[train_set]
@@ -168,10 +187,14 @@ def bootstrap_std(preds: torch.Tensor, labels: torch.Tensor, metric_fn, n: int, 
     return torch.tensor(metrics).std().item()
 
 
-def load_prediction_frames(udonpred_dir: Path, output_dir: Path) -> dict[str, dict[str, pd.DataFrame]]:
+def load_prediction_frames(
+    udonpred_dir: Path,
+    output_dir: Path,
+    split: str,
+) -> dict[str, dict[str, pd.DataFrame]]:
     results: dict[str, dict[str, pd.DataFrame]] = defaultdict(dict)
     for test_set in DATASETS:
-        labels = read_labels(udonpred_dir / "data" / test_set / "test.jsonl")
+        labels = read_labels(udonpred_dir / "data" / test_set / f"{split}.jsonl")
         for train_set in DATASETS:
             preds = read_results(output_dir / "predictions" / f"{train_set}_{test_set}")
             missing = sorted(set(labels) - set(preds))
@@ -259,11 +282,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--udonpred-dir", type=Path, default=Path("UdonPred"))
     parser.add_argument("--output-dir", type=Path, default=Path("results/udonpred_matrix"))
-    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    parser.add_argument("--split", choices=["test", "valid"], default="test")
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda", "mps"], default="cpu")
     parser.add_argument("--batch-size", type=int, default=2000)
     parser.add_argument("--smooth", type=float, default=1.5)
     parser.add_argument("--force", action="store_true", help="Regenerate existing prediction files.")
     parser.add_argument("--skip-predictions", action="store_true")
+    parser.add_argument("--predictions-only", action="store_true")
     parser.add_argument("--bootstrap-samples", type=int, default=0)
     return parser.parse_args()
 
@@ -277,13 +302,17 @@ def main() -> None:
         run_predictions_fast(
             udonpred_dir,
             output_dir,
+            args.split,
             args.device,
             args.batch_size,
             args.smooth,
             args.force,
         )
 
-    frames = load_prediction_frames(udonpred_dir, output_dir)
+    if args.predictions_only:
+        return
+
+    frames = load_prediction_frames(udonpred_dir, output_dir, args.split)
     matrix, stds = compute_metrics(frames, args.bootstrap_samples)
 
     write_matrix_csv(matrix, output_dir / "matrix.csv")
