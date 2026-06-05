@@ -1,0 +1,17 @@
+predictor_a,predictor_b,predictor_common_proteins,predictor_matched_residues,predictor_residue_spearman,predictor_protein_spearman,annotation_metric,annotation_value,annotation_match_mode,annotation_overlap_proteins,annotation_overlap_residues,annotation_notes,residue_spearman_minus_annotation,protein_spearman_minus_annotation
+atlas,chezod,20659,11456702,0.804006,0.892633,spearman,0.220828,sequence,2,372,CheZOD labels negated following existing project convention,0.583178,0.671805
+atlas,pdbflex,20659,11456702,0.397378,0.61037,spearman,0.111006,sequence,25,2587,,0.286372,0.499364
+atlas,plddt,20659,11456702,0.813176,0.85405,spearman,0.295052,sequence,2,424,pLDDT converted to disorder score as 1 - pLDDT / 100,0.518124,0.558998
+atlas,softdis,20659,11456702,0.855393,0.912408,spearman,0.315038,id+sequence,17,1558,,0.540355,0.59737
+chezod,disprot,20659,11456702,0.855081,0.934552,spearman,nan,sequence,1,465,CheZOD labels negated following existing project convention; Spearman undefined because one input has fewer than two values,nan,nan
+chezod,plddt,20659,11456702,0.845469,0.909845,spearman,0.691031,sequence,12,1385,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention,0.154438,0.218814
+chezod,softdis,20659,11456702,0.811431,0.896202,spearman,0.33254,sequence,1,72,CheZOD labels negated following existing project convention,0.478891,0.563662
+chezod,trizod,20659,11456702,0.955227,0.980046,spearman,0.481978,sequence,1,138,CheZOD labels negated following existing project convention,0.473249,0.498068
+disprot,pdbflex,20659,11456702,0.507872,0.669268,spearman,-0.151455,sequence,7,2335,,0.659327,0.820723
+disprot,softdis,20659,11456702,0.863369,0.917692,spearman,0.488921,sequence,8,2642,,0.374448,0.428771
+pdbflex,plddt,20659,11456702,0.557118,0.705861,spearman,0.0115,sequence,6,1412,pLDDT converted to disorder score as 1 - pLDDT / 100,0.545618,0.694361
+pdbflex,softdis,20659,11456702,0.568781,0.708999,spearman,0.07709,sequence,748,123212,,0.491691,0.631909
+pdbflex,trizod,20659,11456702,0.50373,0.645033,spearman,0.174514,sequence,4,525,,0.329216,0.470519
+plddt,softdis,20659,11456702,0.868132,0.923485,spearman,0.656777,sequence,10,2521,pLDDT converted to disorder score as 1 - pLDDT / 100,0.211355,0.266708
+plddt,trizod,20659,11456702,0.854218,0.935306,spearman,0.504646,sequence,2,283,pLDDT converted to disorder score as 1 - pLDDT / 100,0.349572,0.43066
+softdis,trizod,20659,11456702,0.814875,0.922556,spearman,0.481151,sequence,6,563,,0.333724,0.441405

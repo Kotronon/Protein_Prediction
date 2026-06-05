@@ -31,8 +31,10 @@ results/udonpred_matrix/*
 !results/simple_baselines/
 results/simple_baselines/*
 !results/simple_baselines/*.csv
-!results/compare_predictors/*.csv
-!results/compare_predictors_with_seth/*.csv
+!results/compare_predictors*/
+results/compare_predictors*/**
+!results/compare_predictors*/**/
+!results/compare_predictors*/**/*.csv
 !results/annotation_ceiling/
 results/annotation_ceiling/*
 !results/annotation_ceiling/*.csv
@@ -40,8 +42,9 @@ results/annotation_ceiling/*
 !results/normalized_headroom/
 results/normalized_headroom/*
 !results/normalized_headroom/*.csv
+!results/human_proteome/*.csv
 
 # prediction comparison
-HumanProteome/human_preteome_esmdispred*.fasta
-HumanProteome/human_preteome_esmdispred*.fasta.report.csv
+!HumanProteome/human_proteome_esmdispred*.fasta
+HumanProteome/human_proteome_esmdispred*.fasta.report.csv
 HumanProteome/esmdispred_chunks*/

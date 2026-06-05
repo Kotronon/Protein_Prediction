@@ -1,0 +1,29 @@
+has_annotation_agreement,predictor_a,predictor_b,predictor_common_proteins,predictor_matched_residues,predictor_residue_spearman,predictor_protein_spearman,annotation_metric,annotation_value,annotation_match_mode,annotation_overlap_proteins,annotation_overlap_residues,annotation_notes,residue_spearman_minus_annotation,protein_spearman_minus_annotation
+False,SETH,atlas,20659,11456702,0.702803,0.835147,,nan,no_annotation_pair,0,0,No experimental annotation-agreement pair for these predictor names,nan,nan
+False,SETH,chezod,20659,11456702,0.830236,0.922232,,nan,no_annotation_pair,0,0,No experimental annotation-agreement pair for these predictor names,nan,nan
+False,SETH,disprot,20659,11456702,0.749079,0.897539,,nan,no_annotation_pair,0,0,No experimental annotation-agreement pair for these predictor names,nan,nan
+False,SETH,pdbflex,20659,11456702,0.434818,0.58945,,nan,no_annotation_pair,0,0,No experimental annotation-agreement pair for these predictor names,nan,nan
+False,SETH,plddt,20659,11456702,0.789818,0.904977,,nan,no_annotation_pair,0,0,No experimental annotation-agreement pair for these predictor names,nan,nan
+False,SETH,softdis,20659,11456702,0.733021,0.857636,,nan,no_annotation_pair,0,0,No experimental annotation-agreement pair for these predictor names,nan,nan
+False,SETH,trizod,20659,11456702,0.834648,0.925336,,nan,no_annotation_pair,0,0,No experimental annotation-agreement pair for these predictor names,nan,nan
+True,atlas,chezod,20659,11456702,0.804006,0.892633,spearman,0.220828,sequence,2,372,CheZOD labels negated following existing project convention,0.583178,0.671805
+False,atlas,disprot,20659,11456702,0.866774,0.933264,no_overlap,nan,none,0,0,no exact ID or exact sequence overlap with enough comparable residues,nan,nan
+True,atlas,pdbflex,20659,11456702,0.397378,0.61037,spearman,0.111006,sequence,25,2587,,0.286372,0.499364
+True,atlas,plddt,20659,11456702,0.813176,0.85405,spearman,0.295052,sequence,2,424,pLDDT converted to disorder score as 1 - pLDDT / 100,0.518124,0.558998
+True,atlas,softdis,20659,11456702,0.855393,0.912408,spearman,0.315038,id+sequence,17,1558,,0.540355,0.59737
+False,atlas,trizod,20659,11456702,0.812676,0.918027,no_overlap,nan,none,0,0,no exact ID or exact sequence overlap with enough comparable residues,nan,nan
+False,chezod,disprot,20659,11456702,0.855081,0.934552,spearman,nan,sequence,1,465,CheZOD labels negated following existing project convention; Spearman undefined because one input has fewer than two values,nan,nan
+False,chezod,pdbflex,20659,11456702,0.458588,0.615881,no_overlap,nan,none,0,0,no exact ID or exact sequence overlap with enough comparable residues,nan,nan
+True,chezod,plddt,20659,11456702,0.845469,0.909845,spearman,0.691031,sequence,12,1385,pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention,0.154438,0.218814
+True,chezod,softdis,20659,11456702,0.811431,0.896202,spearman,0.33254,sequence,1,72,CheZOD labels negated following existing project convention,0.478891,0.563662
+True,chezod,trizod,20659,11456702,0.955227,0.980046,spearman,0.481978,sequence,1,138,CheZOD labels negated following existing project convention,0.473249,0.498068
+True,disprot,pdbflex,20659,11456702,0.507872,0.669268,spearman,-0.151455,sequence,7,2335,,0.659327,0.820723
+False,disprot,plddt,20659,11456702,0.894091,0.942352,no_overlap,nan,none,0,0,no exact ID or exact sequence overlap with enough comparable residues,nan,nan
+True,disprot,softdis,20659,11456702,0.863369,0.917692,spearman,0.488921,sequence,8,2642,,0.374448,0.428771
+False,disprot,trizod,20659,11456702,0.867406,0.958151,no_overlap,nan,none,0,0,no exact ID or exact sequence overlap with enough comparable residues,nan,nan
+True,pdbflex,plddt,20659,11456702,0.557118,0.705861,spearman,0.0115,sequence,6,1412,pLDDT converted to disorder score as 1 - pLDDT / 100,0.545618,0.694361
+True,pdbflex,softdis,20659,11456702,0.568781,0.708999,spearman,0.07709,sequence,748,123212,,0.491691,0.631909
+True,pdbflex,trizod,20659,11456702,0.50373,0.645033,spearman,0.174514,sequence,4,525,,0.329216,0.470519
+True,plddt,softdis,20659,11456702,0.868132,0.923485,spearman,0.656777,sequence,10,2521,pLDDT converted to disorder score as 1 - pLDDT / 100,0.211355,0.266708
+True,plddt,trizod,20659,11456702,0.854218,0.935306,spearman,0.504646,sequence,2,283,pLDDT converted to disorder score as 1 - pLDDT / 100,0.349572,0.43066
+True,softdis,trizod,20659,11456702,0.814875,0.922556,spearman,0.481151,sequence,6,563,,0.333724,0.441405
