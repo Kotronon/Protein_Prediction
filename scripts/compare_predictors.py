@@ -10,11 +10,6 @@ Outputs:
 * contested_regions.csv: windows where scaled predictor scores disagree most strongly
 * predictor_vs_annotation_agreement.csv: predictor agreement next to annotation agreement
 
-SETH: https://github.com/DagmarIlz/SETH/tree/main
-ADOPT: https://github.com/PeptoneLtd/ADOPT
-IUPred3: requires form to sen request (https://iupred3.elte.hu/download_new)
-metapredict: https://github.com/idptools/metapredict
-
 python scripts/compare_predictors.py \
   --predictor trizod=results/human_proteome/UdonPred/trizod \
   --predictor chezod=results/human_proteome/UdonPred/chezod \
@@ -27,27 +22,39 @@ python scripts/compare_predictors.py \
   --predictor IUPred3=results/human_proteome/IUPred3 \
   --predictor ADOPT=results/human_proteome/ADOPT\
   --predictor metapredict=results/human_proteome/metapredict/metapredict_human_proteome.caid \
-  --output-dir results/compare_predictors_with_seth_and_iupred3_and_adopt_and_metapredict   
+  --predictor PUNCH2_light=results/human_proteome/punch2_light/disorder \
+  --predictor DisoFLAG=results/human_proteome/DisoFLAG/caid \
+  --predictor DisorderUnetLM=results/human_proteome/DisorderUnetLM/disorder \
+  --output-dir results/compare_predictors_with_seth_iupred3_adopt_metapredict_punch2Light_disoflag_disorderunetlm
+     
+
+SETH: https://github.com/DagmarIlz/SETH/tree/main
+ADOPT: https://github.com/PeptoneLtd/ADOPT; but takes only the first 1021 residues of each protein, so not ideal for whole-proteome comparison
+IUPred3: requires form to sen request (https://iupred3.elte.hu/download_new)
+metapredict: https://github.com/idptools/metapredict 
+      
+  --predictor SETH=results/human_proteome/SETH/seth_human_proteome.caid \
+  --predictor IUPred3=results/human_proteome/IUPred3 \
+  --predictor ADOPT=results/human_proteome/ADOPT\
+  --predictor metapredict=results/human_proteome/metapredict/metapredict_human_proteome.caid \
   
   
   CAID predictors:
-  ESMDisPred: https://github.com/wasicse/ESMDisPred
+  ESMDisPred: https://github.com/wasicse/ESMDisPred  ; macht Tobias extern
   DisoFLAG: https://github.com/YihePang/DisoFLAG
-  DisorderUnetLM
-  flDPnn3
-  PUNCH2: https://github.com/deemeng/punch2
+  DisorderUnetLM:  CodeOcean platform (doi.org/10.24433/CO.7350682.v1)
+  flDPnn3; geth nicht
+  PUNCH2: https://github.com/deemeng/punch2 ; but without MSA -> Punch2_light
+  evtl.: rawMSA: https://bitbucket.org/clami66/rawmsa/src/master/
+  evtl.: DisPredict3: https://github.com/wasicse/Dispredict3.0
   
-  python scripts/compare_predictors.py \
-  --predictor trizod=results/human_proteome/UdonPred/trizod \
-  --predictor chezod=results/human_proteome/UdonPred/chezod \
-  --predictor softdis=results/human_proteome/UdonPred/softdis \
-  --predictor pdbflex=results/human_proteome/UdonPred/pdbflex \
-  --predictor atlas=results/human_proteome/UdonPred/atlas \
-  --predictor plddt=results/human_proteome/UdonPred/plddt \
-  --predictor disprot=results/human_proteome/UdonPred/disprot \
-  --predictor ESMDisPred=results/human_proteome/ESMDisPred_max1500/disorder/ESMDisPred-DNN
-  --output-dir results/compare_predictors_with_esmdispred   
   
+  --predictor PUNCH2_light=results/human_proteome/punch2_light/disorder \
+  --predictor DisoFLAG=results/human_proteome/DisoFLAG/caid \
+  --predictor DisorderUnetLM=results/human_proteome/DisorderUnetLM/disorder \
+  
+  
+  --output-dir results/compare_predictors_with_seth_iupred3_adopt_metapredict_punch2Light_disoflag
 
 """
 
