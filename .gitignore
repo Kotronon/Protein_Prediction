@@ -45,6 +45,7 @@ results/normalized_headroom/*
 !results/human_proteome/*.csv
 
 # prediction comparison
-!HumanProteome/human_proteome_esmdispred*.fasta
+HumanProteome/human_proteome_esmdispred*.fasta
 HumanProteome/human_proteome_esmdispred*.fasta.report.csv
 HumanProteome/esmdispred_chunks*/
+DisorderUnetLM/
