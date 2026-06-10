@@ -1,4 +1,0 @@
-predictor_a,predictor_b,common_proteins,matched_residues,residue_spearman,residue_pearson,residue_zscore_mae,protein_spearman,protein_pearson,protein_zscore_mae
-ADOPT,IUPred3,20659,9861047,0.637572,0.712196,0.600289,0.704414,0.741337,0.539165
-ADOPT,SETH,20659,9861047,0.808299,0.875295,0.381239,0.933621,0.948784,0.238737
-IUPred3,SETH,20659,11456702,0.588186,0.676841,0.62167,0.692484,0.725673,0.547645
