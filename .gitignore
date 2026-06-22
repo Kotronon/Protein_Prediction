@@ -38,3 +38,5 @@ results/annotation_ceiling/*
 !results/normalized_headroom/
 results/normalized_headroom/*
 !results/normalized_headroom/*.csv
+
+docs/lecture_slides/
