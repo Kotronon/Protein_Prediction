@@ -1,0 +1,31 @@
+metric,cluster_position,predictor,group
+residue_spearman,1,pdbflex,UdonPred
+residue_spearman,2,IUPred3,classical external
+residue_spearman,3,ADOPT,classical external
+residue_spearman,4,chezod,UdonPred
+residue_spearman,5,trizod,UdonPred
+residue_spearman,6,SETH,classical external
+residue_spearman,7,PUNCH2_light,CAID-style external
+residue_spearman,8,disprot,UdonPred
+residue_spearman,9,plddt,UdonPred
+residue_spearman,10,softdis,UdonPred
+residue_spearman,11,atlas,UdonPred
+residue_spearman,12,metapredict,classical external
+residue_spearman,13,DisorderUnetLM,CAID-style external
+residue_spearman,14,DisoFLAG,CAID-style external
+residue_spearman,15,DisPredict3,CAID-style external
+protein_spearman,1,pdbflex,UdonPred
+protein_spearman,2,IUPred3,classical external
+protein_spearman,3,atlas,UdonPred
+protein_spearman,4,softdis,UdonPred
+protein_spearman,5,metapredict,classical external
+protein_spearman,6,PUNCH2_light,CAID-style external
+protein_spearman,7,plddt,UdonPred
+protein_spearman,8,disprot,UdonPred
+protein_spearman,9,trizod,UdonPred
+protein_spearman,10,chezod,UdonPred
+protein_spearman,11,SETH,classical external
+protein_spearman,12,ADOPT,classical external
+protein_spearman,13,DisorderUnetLM,CAID-style external
+protein_spearman,14,DisoFLAG,CAID-style external
+protein_spearman,15,DisPredict3,CAID-style external

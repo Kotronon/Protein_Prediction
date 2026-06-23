@@ -331,12 +331,28 @@ def zscore(values: np.ndarray) -> np.ndarray:
     return (values - mean) / std
 
 
+def zscore_mae_stats(left: np.ndarray, right: np.ndarray) -> dict[str, float]:
+    if len(left) == 0 or len(right) == 0:
+        return {"mae": math.nan, "std": math.nan, "se": math.nan}
+
+    abs_diff = np.abs(zscore(left) - zscore(right))
+    mae = float(np.mean(abs_diff))
+    if len(abs_diff) < 2:
+        return {"mae": mae, "std": math.nan, "se": math.nan}
+
+    std = float(np.std(abs_diff, ddof=1))
+    se = float(std / math.sqrt(len(abs_diff)))
+    return {"mae": mae, "std": std, "se": se}
+
+
 def compute_pairwise_agreements(predictions: PredictionsByPredictor) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for left_name, right_name in combinations(sorted(predictions), 2):
         residue_left, residue_right, protein_left, protein_right, common_proteins = (
             finite_pair_values(predictions[left_name], predictions[right_name])
         )
+        residue_zscore = zscore_mae_stats(residue_left, residue_right)
+        protein_zscore = zscore_mae_stats(protein_left, protein_right)
         rows.append(
             {
                 "predictor_a": left_name,
@@ -345,18 +361,14 @@ def compute_pairwise_agreements(predictions: PredictionsByPredictor) -> list[dic
                 "matched_residues": len(residue_left),
                 "residue_spearman": correlation(residue_left, residue_right, "spearman"),
                 "residue_pearson": correlation(residue_left, residue_right, "pearson"),
-                "residue_zscore_mae": float(
-                    np.mean(np.abs(zscore(residue_left) - zscore(residue_right)))
-                )
-                if len(residue_left)
-                else math.nan,
+                "residue_zscore_mae": residue_zscore["mae"],
+                "residue_zscore_mae_std": residue_zscore["std"],
+                "residue_zscore_mae_se": residue_zscore["se"],
                 "protein_spearman": correlation(protein_left, protein_right, "spearman"),
                 "protein_pearson": correlation(protein_left, protein_right, "pearson"),
-                "protein_zscore_mae": float(
-                    np.mean(np.abs(zscore(protein_left) - zscore(protein_right)))
-                )
-                if len(protein_left)
-                else math.nan,
+                "protein_zscore_mae": protein_zscore["mae"],
+                "protein_zscore_mae_std": protein_zscore["std"],
+                "protein_zscore_mae_se": protein_zscore["se"],
             }
         )
     return rows
