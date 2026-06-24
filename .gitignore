@@ -50,6 +50,8 @@ docs/lecture_slides/
 docs/contested_regions.md
 docs/contested_regions_report*.pdf
 docs/contested_regions_report*.tex
+docs/predictor_comparison_report.pdf
+docs/predictor_comparison_with_pdbflex_report.pdf
 !results/human_proteome/*.csv
 
 # prediction comparison

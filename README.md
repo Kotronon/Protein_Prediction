@@ -230,7 +230,7 @@ MPLCONFIGDIR=/tmp/proteinprediction-mpl \
 
 Outputs are written to
 `results/compare_predictors_with_all_predictors_wo_pdbflex/global_behavior/`
-and displayed in `notebooks/05_predictor_agreement.ipynb`. The analysis keeps
+and displayed in `notebooks/12_predictor_agreement.ipynb`. The analysis keeps
 pooled residue correlation separate from protein-level correlation and uses
 within-predictor percentiles, rather than a universal score threshold, when
 combining predictors with different score scales.
@@ -285,10 +285,11 @@ These are ignored by `.gitignore`.
 
 ## Main References In This Repo
 
-- Full predictor comparison report: [Markdown](docs/predictor_comparison_report.md) | [PDF](docs/predictor_comparison_report.pdf)
-- Predictor comparison including PDBflex: [Markdown](docs/predictor_comparison_with_pdbflex_report.md) | [PDF](docs/predictor_comparison_with_pdbflex_report.pdf)
+- Full predictor comparison report: [docs/predictor_comparison_report.md](docs/predictor_comparison_report.md)
+- Predictor comparison including PDBflex: [docs/predictor_comparison_with_pdbflex_report.md](docs/predictor_comparison_with_pdbflex_report.md)
 - Assignment PDF: [docs/proj4_disorder.pdf](docs/proj4_disorder.pdf)
 - Setup guide: [docs/setup.md](docs/setup.md)
 - GPU guide: [docs/gpu_setup.md](docs/gpu_setup.md)
+- Notebook workflow: [notebooks/README.md](notebooks/README.md)
 - Starter notebook: [notebooks/01_setup_and_exploration.ipynb](notebooks/01_setup_and_exploration.ipynb)
 - Matrix script: [scripts/run_udonpred_matrix.py](scripts/run_udonpred_matrix.py)

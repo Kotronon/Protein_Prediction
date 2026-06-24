@@ -708,7 +708,7 @@ The analysis is generated from the following repository components:
 - `scripts/analyze_dispredict3_vs_udonpred.py`
 - `scripts/diagnose_dispredict3_disagreements.py`
 - `scripts/analyze_global_predictor_behavior.py`
-- `notebooks/05_predictor_agreement.ipynb`
+- `notebooks/12_predictor_agreement.ipynb`
 
 Principal result tables are stored under:
 
