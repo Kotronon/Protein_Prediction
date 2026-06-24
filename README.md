@@ -217,6 +217,24 @@ seed-13 shuffled-label null summaries. The primary formula is
 `(UdonPred - best_simple_baseline) / (annotation_ceiling - best_simple_baseline)`.
 Missing off-diagonal annotation ceilings remain blank.
 
+## Global Predictor Behavior
+
+After `pairwise_agreement.csv` and the human-proteome predictor outputs exist,
+generate hierarchical predictor clusters, annotation-agreement comparisons,
+protein-length diagnostics, and the full input QC table:
+
+```bash
+MPLCONFIGDIR=/tmp/proteinprediction-mpl \
+  UdonPred/.venv/bin/python scripts/analyze_global_predictor_behavior.py
+```
+
+Outputs are written to
+`results/compare_predictors_with_all_predictors_wo_pdbflex/global_behavior/`
+and displayed in `notebooks/05_predictor_agreement.ipynb`. The analysis keeps
+pooled residue correlation separate from protein-level correlation and uses
+within-predictor percentiles, rather than a universal score threshold, when
+combining predictors with different score scales.
+
 ## GPU Workflow
 
 For another computer with an NVIDIA GPU, use:
@@ -263,6 +281,8 @@ These are ignored by `.gitignore`.
 
 ## Main References In This Repo
 
+- Full predictor comparison report: [Markdown](docs/predictor_comparison_report.md) | [PDF](docs/predictor_comparison_report.pdf)
+- Predictor comparison including PDBflex: [Markdown](docs/predictor_comparison_with_pdbflex_report.md) | [PDF](docs/predictor_comparison_with_pdbflex_report.pdf)
 - Assignment PDF: [docs/proj4_disorder.pdf](docs/proj4_disorder.pdf)
 - Setup guide: [docs/setup.md](docs/setup.md)
 - GPU guide: [docs/gpu_setup.md](docs/gpu_setup.md)

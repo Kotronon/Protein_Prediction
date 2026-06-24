@@ -1,0 +1,5 @@
+statistic,value
+n_primary_pairs,15.0
+all_primary_pair_spearman,0.8107142857142855
+n_continuous_pairs,13.0
+continuous_pair_spearman,0.8241758241758241

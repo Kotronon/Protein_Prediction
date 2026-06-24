@@ -2,6 +2,7 @@
 
 # Python environments and caches
 .venv/
+.venv-dispredict3-mps/
 venv/
 __pycache__/
 *.py[cod]
@@ -31,6 +32,10 @@ results/udonpred_matrix/*
 !results/simple_baselines/
 results/simple_baselines/*
 !results/simple_baselines/*.csv
+!results/compare_*/
+results/compare_*/**
+!results/compare_*/**/
+!results/compare_*/**/*.csv
 !results/annotation_ceiling/
 results/annotation_ceiling/*
 !results/annotation_ceiling/*.csv
@@ -40,3 +45,10 @@ results/normalized_headroom/*
 !results/normalized_headroom/*.csv
 
 docs/lecture_slides/
+!results/human_proteome/*.csv
+
+# prediction comparison
+HumanProteome/human_proteome_esmdispred*.fasta
+HumanProteome/human_proteome_esmdispred*.fasta.report.csv
+HumanProteome/esmdispred_chunks*/
+DisorderUnetLM/

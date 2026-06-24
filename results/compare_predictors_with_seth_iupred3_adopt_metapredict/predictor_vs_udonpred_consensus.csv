@@ -1,0 +1,12 @@
+predictor,comparison_group,consensus_models,common_proteins,matched_residues,residue_spearman_vs_udon_consensus,protein_spearman_vs_udon_consensus,residue_zscore_mae_vs_udon_consensus
+disprot,UdonPred leave-one-out,"trizod, chezod, softdis, pdbflex, atlas, plddt",20659,11456702,0.9166646419686423,0.9729677843582288,0.246963762110022
+plddt,UdonPred leave-one-out,"trizod, chezod, softdis, pdbflex, atlas, disprot",20659,11456702,0.9125635873372411,0.9488109132199795,0.23884019410893606
+trizod,UdonPred leave-one-out,"chezod, softdis, pdbflex, atlas, plddt, disprot",20659,11456702,0.9085609004127065,0.9723675255583906,0.28279071373019377
+softdis,UdonPred leave-one-out,"trizod, chezod, pdbflex, atlas, plddt, disprot",20659,11456702,0.8964552860294518,0.9421540085210012,0.29001489318348866
+chezod,UdonPred leave-one-out,"trizod, softdis, pdbflex, atlas, plddt, disprot",20659,11456702,0.8814923642339368,0.945509032694009,0.28755609276128113
+atlas,UdonPred leave-one-out,"trizod, chezod, softdis, pdbflex, plddt, disprot",20659,11456702,0.8490454256916318,0.9201127836489651,0.479148826560145
+pdbflex,UdonPred leave-one-out,"trizod, chezod, softdis, atlas, plddt, disprot",20659,11456702,0.5331093705623303,0.67622487706539,0.8006975147712141
+SETH,external predictor,"trizod, chezod, softdis, pdbflex, atlas, plddt, disprot",20659,11456702,0.8162521601028248,0.915609384441943,0.3550496712328876
+ADOPT,external predictor,"trizod, chezod, softdis, pdbflex, atlas, plddt, disprot",20659,9861047,0.8158756406537606,0.9243786990729468,0.37184802836404846
+metapredict,external predictor,"trizod, chezod, softdis, pdbflex, atlas, plddt, disprot",20659,11456702,0.8114482927395046,0.9288650910567667,0.34032367151966136
+IUPred3,external predictor,"trizod, chezod, softdis, pdbflex, atlas, plddt, disprot",20659,11456702,0.6665931116266414,0.7248273812424122,0.5781710790733158

@@ -481,6 +481,37 @@ def flatten_matched_labels(
     return np.concatenate(labels_a), np.concatenate(labels_b)
 
 
+def flatten_matched_protein_labels(
+    matches: list[MatchedProtein],
+    dataset_a: str,
+    dataset_b: str,
+) -> tuple[np.ndarray, np.ndarray]:
+    protein_labels_a = []
+    protein_labels_b = []
+    for match in matches:
+        raw_a = match.record_a.labels
+        raw_b = match.record_b.labels
+        directed_a = labels_in_common_direction(raw_a, dataset_a)
+        directed_b = labels_in_common_direction(raw_b, dataset_b)
+        if match.aligned_indices is None:
+            mask = comparable_mask(raw_a, raw_b)
+            if not np.any(mask):
+                continue
+            protein_labels_a.append(float(np.mean(directed_a[: len(mask)][mask])))
+            protein_labels_b.append(float(np.mean(directed_b[: len(mask)][mask])))
+        else:
+            indices_a = [index_a for index_a, _ in match.aligned_indices]
+            indices_b = [index_b for _, index_b in match.aligned_indices]
+            if not indices_a:
+                continue
+            protein_labels_a.append(float(np.mean(directed_a[indices_a])))
+            protein_labels_b.append(float(np.mean(directed_b[indices_b])))
+    return (
+        np.asarray(protein_labels_a, dtype=np.float64),
+        np.asarray(protein_labels_b, dtype=np.float64),
+    )
+
+
 def safe_metric(fn, *values) -> tuple[float, str]:
     try:
         return float(fn(*values)), ""
@@ -577,6 +608,38 @@ def compute_pair_metrics(
     else:
         value, note = safe_metric(lambda x, y: spearmanr(x, y).statistic, continuous, binary)
         metrics.append(("spearman", value, note))
+    return metrics
+
+
+def compute_protein_pair_metrics(
+    protein_labels_a: np.ndarray,
+    protein_labels_b: np.ndarray,
+) -> list[tuple[str, float, str]]:
+    if len(protein_labels_a) == 0:
+        return [("protein_no_metric", math.nan, "no comparable proteins")]
+    if len(protein_labels_a) < 2:
+        note = "protein-level correlation undefined because fewer than two proteins overlap"
+        return [("protein_spearman", math.nan, note), ("protein_pearson", math.nan, note)]
+    if np.unique(protein_labels_a).size < 2 or np.unique(protein_labels_b).size < 2:
+        note = "protein-level correlation undefined because one annotation has fewer than two values"
+        return [("protein_spearman", math.nan, note), ("protein_pearson", math.nan, note)]
+
+    metrics = []
+    value, note = safe_metric(
+        lambda x, y: spearmanr(x, y).statistic,
+        protein_labels_a,
+        protein_labels_b,
+    )
+    metrics.append(("protein_spearman", value, note))
+    value, note = safe_metric(
+        lambda x, y: pearsonr(x, y).statistic,
+        protein_labels_a,
+        protein_labels_b,
+    )
+    metrics.append(("protein_pearson", value, note))
+    diff = protein_labels_a - protein_labels_b
+    metrics.append(("protein_mae", float(np.mean(np.abs(diff))), ""))
+    metrics.append(("protein_rmse", float(np.sqrt(np.mean(diff * diff))), ""))
     return metrics
 
 
@@ -1052,7 +1115,15 @@ def main() -> None:
                 )
 
             labels_a, labels_b = flatten_matched_labels(matches, dataset_a, dataset_b)
-            metrics = compute_pair_metrics(labels_a, labels_b, dataset_a, dataset_b, args.threshold)
+            protein_labels_a, protein_labels_b = flatten_matched_protein_labels(
+                matches,
+                dataset_a,
+                dataset_b,
+            )
+            metrics = [
+                *compute_pair_metrics(labels_a, labels_b, dataset_a, dataset_b, args.threshold),
+                *compute_protein_pair_metrics(protein_labels_a, protein_labels_b),
+            ]
             base_notes = []
             if dataset_a == "plddt" or dataset_b == "plddt":
                 base_notes.append("pLDDT converted to disorder score as 1 - pLDDT / 100")
