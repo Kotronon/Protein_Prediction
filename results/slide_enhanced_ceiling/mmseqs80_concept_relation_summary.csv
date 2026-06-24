@@ -1,0 +1,5 @@
+concept_relation,n_pairs,median_primary_ceiling,mean_primary_ceiling,total_residues,example_pairs
+unknown or weakly related,4,0.765037,0.6471515,5669,atlas vs disprot; chezod vs disprot; plddt vs disprot; trizod vs atlas
+same annotation family,2,0.6882265000000001,0.6882265000000001,7876,softdis vs atlas; trizod vs chezod
+related disorder concept,8,0.529718,0.498763375,38995,atlas vs plddt; chezod vs atlas; chezod vs plddt; chezod vs softdis; softdis vs disprot; softdis vs plddt
+different concept: flexibility vs disorder/proxy,6,0.20851000000000003,0.21793083333333332,236001,chezod vs pdbflex; pdbflex vs atlas; pdbflex vs disprot; pdbflex vs plddt; softdis vs pdbflex; trizod vs pdbflex

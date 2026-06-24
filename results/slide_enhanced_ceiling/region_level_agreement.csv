@@ -1,0 +1,17 @@
+dataset_a,dataset_b,pair,family_a,family_b,n_residues,positive_rate_a,positive_rate_b,n_regions_a,n_regions_b,region_precision,region_recall,region_f1,residue_jaccard
+chezod,disprot,chezod vs disprot,NMR chemical-shift disorder,curated binary disorder,465,0.610752688172043,1.0,39,1,1.0,1.0,1.0,0.610752688172043
+trizod,chezod,trizod vs chezod,NMR chemical-shift disorder,NMR chemical-shift disorder,138,0.9420289855072463,0.7246376811594203,4,9,0.75,1.0,0.8571428571428571,0.7293233082706767
+trizod,plddt,trizod vs plddt,NMR chemical-shift disorder,AlphaFold confidence proxy,283,0.4664310954063604,0.06713780918727916,5,3,0.4,1.0,0.5714285714285715,0.14393939393939395
+softdis,atlas,softdis vs atlas,derived soft disorder,derived soft disorder,1558,0.1951219512195122,0.5988446726572529,55,114,0.9454545454545454,0.3333333333333333,0.49289099526066343,0.25075834175935285
+trizod,softdis,trizod vs softdis,NMR chemical-shift disorder,derived soft disorder,563,0.10657193605683836,0.2433392539964476,10,17,0.9,0.29411764705882354,0.4433497536945813,0.3680555555555556
+chezod,plddt,chezod vs plddt,NMR chemical-shift disorder,AlphaFold confidence proxy,1385,0.28303249097472927,0.07075812274368232,74,41,0.2972972972972973,0.6097560975609756,0.39970930232558144,0.14219114219114218
+softdis,pdbflex,softdis vs pdbflex,derived soft disorder,structural flexibility/dynamics,123000,0.2040569105691057,0.08660162601626016,3741,1283,0.23041967388398824,0.6944660950896336,0.3460290049259131,0.1301090564248459
+pdbflex,atlas,pdbflex vs atlas,structural flexibility/dynamics,derived soft disorder,2587,0.13103981445689988,0.5488983378430614,42,175,0.8333333333333334,0.17714285714285713,0.29217719132893494,0.14369310793237972
+softdis,plddt,softdis vs plddt,derived soft disorder,AlphaFold confidence proxy,2521,0.25585085283617615,0.07616025386751289,68,20,0.14705882352941177,0.95,0.25469168900804295,0.27203647416413373
+pdbflex,disprot,pdbflex vs disprot,structural flexibility/dynamics,curated binary disorder,2335,0.10364025695931478,0.05481798715203426,23,8,0.17391304347826086,0.375,0.2376237623762376,0.08823529411764706
+softdis,disprot,softdis vs disprot,derived soft disorder,curated binary disorder,2642,0.21688115064345193,0.0987887963663891,77,9,0.12987012987012986,0.7777777777777778,0.22257551669316375,0.3538961038961039
+trizod,pdbflex,trizod vs pdbflex,NMR chemical-shift disorder,structural flexibility/dynamics,525,0.04380952380952381,0.10857142857142857,5,7,0.4,0.14285714285714285,0.21052631578947364,0.03896103896103896
+atlas,plddt,atlas vs plddt,derived soft disorder,AlphaFold confidence proxy,424,0.18867924528301888,0.009433962264150943,27,2,0.07407407407407407,1.0,0.13793103448275862,0.05
+pdbflex,plddt,pdbflex vs plddt,structural flexibility/dynamics,AlphaFold confidence proxy,1412,0.08073654390934844,0.07152974504249292,16,14,0.0625,0.07142857142857142,0.06666666666666667,0.004672897196261682
+chezod,softdis,chezod vs softdis,NMR chemical-shift disorder,derived soft disorder,72,0.0,0.125,0,4,0.0,0.0,0.0,0.0
+chezod,atlas,chezod vs atlas,NMR chemical-shift disorder,derived soft disorder,372,0.0,0.19623655913978494,0,25,0.0,0.0,0.0,0.0

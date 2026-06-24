@@ -1,0 +1,8 @@
+dataset,n_udonpred_test_proteins,n_matched_human_proteins,protein_overlap_fraction,n_udonpred_test_residues,n_matched_human_residues,residue_overlap_fraction,n_valid_annotated_residues,n_matched_valid_annotated_residues,valid_annotated_residue_overlap_fraction,n_sequence_matches,n_accession_matches,n_gene_matches,notes
+trizod,348,4,0.011494252873563218,38526,570,0.014795203239370815,37133,554,0.014919343979748471,4,0,0,human proteome FASTA has no residue-level labels; exact sequence match is the primary comparison
+chezod,117,5,0.042735042735042736,13952,639,0.045799885321100915,13068,623,0.04767370676461585,5,0,0,human proteome FASTA has no residue-level labels; exact sequence match is the primary comparison
+softdis,1869,17,0.00909577314071696,271668,3474,0.012787667299792393,271668,3474,0.012787667299792393,17,0,0,human proteome FASTA has no residue-level labels; exact sequence match is the primary comparison
+pdbflex,1319,14,0.01061410159211524,225651,3022,0.013392362542155808,225651,3022,0.013392362542155808,14,0,0,human proteome FASTA has no residue-level labels; exact sequence match is the primary comparison
+atlas,140,0,0.0,16907,0,0.0,16907,0,0.0,0,0,0,human proteome FASTA has no residue-level labels; exact sequence match is the primary comparison
+plddt,265,114,0.43018867924528303,62945,29516,0.4689173087616173,62945,29516,0.4689173087616173,114,0,0,human proteome FASTA has no residue-level labels; exact sequence match is the primary comparison
+disprot,319,83,0.2601880877742947,160422,41483,0.2585867275062024,99239,27093,0.2730075877427221,83,0,0,human proteome FASTA has no residue-level labels; exact sequence match is the primary comparison

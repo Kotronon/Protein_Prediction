@@ -1,0 +1,11 @@
+family_pair,n_pairs,median_ceiling,mean_ceiling,max_ceiling,total_residues,example_pairs
+curated binary disorder <-> derived soft disorder,1,0.929907,0.929907,0.929907,2642,softdis vs disprot
+AlphaFold confidence proxy <-> NMR chemical-shift disorder,2,0.5978384999999999,0.5978384999999999,0.691031,1668,chezod vs plddt; trizod vs plddt
+NMR chemical-shift disorder <-> NMR chemical-shift disorder,1,0.481978,0.481978,0.481978,138,trizod vs chezod
+AlphaFold confidence proxy <-> derived soft disorder,2,0.4759145,0.4759145,0.656777,2945,atlas vs plddt; softdis vs plddt
+NMR chemical-shift disorder <-> derived soft disorder,3,0.33254,0.34483966666666666,0.481151,1007,trizod vs softdis; chezod vs atlas; chezod vs softdis
+derived soft disorder <-> derived soft disorder,1,0.315038,0.315038,0.315038,1558,softdis vs atlas
+curated binary disorder <-> structural flexibility/dynamics,1,0.307951,0.307951,0.307951,2335,pdbflex vs disprot
+NMR chemical-shift disorder <-> structural flexibility/dynamics,1,0.174514,0.174514,0.174514,525,trizod vs pdbflex
+derived soft disorder <-> structural flexibility/dynamics,2,0.09404799999999999,0.09404799999999999,0.111006,125799,softdis vs pdbflex; pdbflex vs atlas
+AlphaFold confidence proxy <-> structural flexibility/dynamics,1,0.0115,0.0115,0.0115,1412,pdbflex vs plddt

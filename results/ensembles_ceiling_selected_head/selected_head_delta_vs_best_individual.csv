@@ -1,0 +1,6 @@
+strategy,trizod,chezod,softdis,pdbflex,atlas,plddt,"disprot
+(AP)","disprot
+(AUROC)"
+best_individual_test_oracle,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+validation_selected_single_head,0.0,-0.01660865545272827,0.0,0.0,0.0,0.0,0.0,0.0
+ceiling_aware_selected_single_head,0.0,-0.01660865545272827,0.0,0.0,0.0,0.0,0.0,0.0

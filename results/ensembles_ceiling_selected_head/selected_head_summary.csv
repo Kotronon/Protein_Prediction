@@ -1,0 +1,4 @@
+strategy,mean_score,mean_normalized_headroom,wins_vs_best_individual,ties_vs_best_individual,losses_vs_best_individual
+best_individual_test_oracle,0.7131302431225777,0.5571130430980608,0,8,0
+validation_selected_single_head,0.7110541611909866,0.5526342981076693,0,7,1
+ceiling_aware_selected_single_head,0.7110541611909866,0.5526342981076693,0,7,1

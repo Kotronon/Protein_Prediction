@@ -1,0 +1,15 @@
+split,dataset,n_proteins,n_residues
+test,trizod,348,37133
+test,chezod,117,13068
+test,softdis,1869,271668
+test,pdbflex,1319,225651
+test,atlas,140,16907
+test,plddt,265,62945
+test,disprot,319,99239
+valid,trizod,685,77160
+valid,chezod,117,13334
+valid,softdis,1484,424887
+valid,pdbflex,1172,358397
+valid,atlas,139,34783
+valid,plddt,257,109128
+valid,disprot,283,89053

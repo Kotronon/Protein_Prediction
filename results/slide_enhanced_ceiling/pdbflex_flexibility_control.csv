@@ -1,0 +1,7 @@
+dataset_a,dataset_b,match_mode,n_proteins_overlap,n_residues_compared,annotation_type_a,annotation_type_b,metric,value,threshold_used,notes,primary_metric,family_a,family_b,expected_biological_similarity,expected_similarity_score,overlap_confidence,observed_strength,pair
+softdis,pdbflex,sequence,748,123212,continuous,continuous,spearman,0.07709,0.5,,spearman,derived soft disorder,structural flexibility/dynamics,low,1.0,high,low,softdis vs pdbflex
+pdbflex,atlas,sequence,25,2587,continuous,continuous,spearman,0.111006,0.5,,spearman,structural flexibility/dynamics,derived soft disorder,low,1.0,medium,low,pdbflex vs atlas
+pdbflex,disprot,sequence,7,2335,continuous,binary,auroc,0.307951,0.5,,auroc,structural flexibility/dynamics,curated binary disorder,low,1.0,medium,low,pdbflex vs disprot
+pdbflex,plddt,sequence,6,1412,continuous,continuous,spearman,0.0115,0.5,pLDDT converted to disorder score as 1 - pLDDT / 100,spearman,structural flexibility/dynamics,AlphaFold confidence proxy,low,1.0,medium,low,pdbflex vs plddt
+trizod,pdbflex,sequence,4,525,continuous,continuous,spearman,0.174514,0.5,,spearman,NMR chemical-shift disorder,structural flexibility/dynamics,low,1.0,low,low,trizod vs pdbflex
+chezod,pdbflex,none,0,0,continuous,continuous,no_overlap,,0.5,no exact ID or exact sequence overlap with enough comparable residues,spearman,NMR chemical-shift disorder,structural flexibility/dynamics,low,1.0,no estimate,no estimate,chezod vs pdbflex

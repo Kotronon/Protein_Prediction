@@ -1,0 +1,8 @@
+disagreement_type,with_pdbflex,without_pdbflex,delta_without_minus_with
+general_predictor_spread,4824,5371,547
+pdbflex_high_outlier,445,0,-445
+possible_molecular_recognition_element,206,118,-88
+tmh_or_signal_peptide_like_artifact,80,80,0
+nmr_vs_curated_conflict,40,49,9
+broad_multimodel_spread,38,15,-23
+plddt_uncertainty_outlier,12,12,0

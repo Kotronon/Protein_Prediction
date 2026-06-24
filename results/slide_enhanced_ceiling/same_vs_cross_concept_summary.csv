@@ -1,0 +1,4 @@
+concept_relation,n_pairs,median_ceiling,mean_ceiling,median_overlap,pairs
+related disorder concept,8,0.4928985,0.5139915,493.5,trizod vs softdis; atlas vs plddt; chezod vs atlas; softdis vs disprot; chezod vs plddt; softdis vs plddt; trizod vs plddt; chezod vs softdis
+same annotation family,2,0.398508,0.398508,848.0,softdis vs atlas; trizod vs chezod
+different concept: flexibility vs disorder/proxy,5,0.111006,0.13641219999999998,2335.0,softdis vs pdbflex; trizod vs pdbflex; pdbflex vs disprot; pdbflex vs atlas; pdbflex vs plddt

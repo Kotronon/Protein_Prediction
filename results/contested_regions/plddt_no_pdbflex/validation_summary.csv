@@ -1,0 +1,7 @@
+metric,value
+n_windows,5645.0
+n_proteins,265.0
+median_priority_score,0.15749556365656753
+top5pct_priority_threshold,0.4188254292055272
+fraction_with_human_overlap,0.4736935341009743
+spearman_disagreement_vs_label_boundary_uncertainty,-0.34305501069610644

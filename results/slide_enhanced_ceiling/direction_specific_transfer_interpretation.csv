@@ -1,0 +1,71 @@
+train_dataset,test_metric,test_dataset,train_family,test_family,biological_hypothesis,expected_biological_similarity,udon_score,annotation_ceiling,normalized_headroom,status,ceiling_pair,n_residues_compared
+trizod,trizod,trizod,NMR chemical-shift disorder,NMR chemical-shift disorder,same annotation definition; should be the most concept-aligned transfer,same dataset,0.507853,1.0,0.322386,ok,trizod vs trizod,
+trizod,chezod,chezod,NMR chemical-shift disorder,NMR chemical-shift disorder,tests transfer between related disorder-like concepts,high,0.707732,0.481978,,ceiling_not_above_baseline,trizod vs chezod,138.0
+trizod,softdis,softdis,NMR chemical-shift disorder,derived soft disorder,tests transfer between related disorder-like concepts,medium,0.25705,0.481151,-0.065955,ok,trizod vs softdis,563.0
+trizod,pdbflex,pdbflex,NMR chemical-shift disorder,structural flexibility/dynamics,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,-0.005696,0.174514,,ceiling_not_above_baseline,trizod vs pdbflex,525.0
+trizod,atlas,atlas,NMR chemical-shift disorder,derived soft disorder,tests transfer between weakly characterized or weakly overlapping annotation concepts,unknown/no-overlap,0.412662,,,missing_ceiling,,
+trizod,plddt,plddt,NMR chemical-shift disorder,AlphaFold confidence proxy,tests whether direct NMR disorder aligns with AlphaFold low-confidence disorder proxy,medium,0.71881,0.504646,2.21745,ok,trizod vs plddt,283.0
+trizod,"disprot
+(AP)",disprot,NMR chemical-shift disorder,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.898505,,,missing_ceiling,,
+trizod,"disprot
+(AUROC)",disprot,NMR chemical-shift disorder,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.929508,,,missing_ceiling,,
+chezod,trizod,trizod,NMR chemical-shift disorder,NMR chemical-shift disorder,tests transfer between related disorder-like concepts,high,0.486243,0.481978,1.020478,ok,trizod vs chezod,138.0
+chezod,chezod,chezod,NMR chemical-shift disorder,NMR chemical-shift disorder,same annotation definition; should be the most concept-aligned transfer,same dataset,0.691124,1.0,0.33366,ok,chezod vs chezod,
+chezod,softdis,softdis,NMR chemical-shift disorder,derived soft disorder,tests transfer between related disorder-like concepts,medium,0.234814,0.33254,-0.585843,ok,chezod vs softdis,72.0
+chezod,pdbflex,pdbflex,NMR chemical-shift disorder,structural flexibility/dynamics,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,-0.038872,,,missing_ceiling,,
+chezod,atlas,atlas,NMR chemical-shift disorder,derived soft disorder,tests transfer between related disorder-like concepts,medium,0.326703,0.220828,,ceiling_not_above_baseline,chezod vs atlas,372.0
+chezod,plddt,plddt,NMR chemical-shift disorder,AlphaFold confidence proxy,tests whether direct NMR disorder aligns with AlphaFold low-confidence disorder proxy,high,0.713062,0.691031,1.060809,ok,chezod vs plddt,1385.0
+chezod,"disprot
+(AP)",disprot,NMR chemical-shift disorder,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.889928,,,missing_ceiling,chezod vs disprot,465.0
+chezod,"disprot
+(AUROC)",disprot,NMR chemical-shift disorder,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.92515,,,missing_ceiling,chezod vs disprot,465.0
+softdis,trizod,trizod,derived soft disorder,NMR chemical-shift disorder,tests transfer between related disorder-like concepts,medium,0.470177,0.481151,0.947099,ok,trizod vs softdis,563.0
+softdis,chezod,chezod,derived soft disorder,NMR chemical-shift disorder,tests transfer between related disorder-like concepts,medium,0.536943,0.33254,,ceiling_not_above_baseline,chezod vs softdis,72.0
+softdis,softdis,softdis,derived soft disorder,derived soft disorder,same annotation definition; should be the most concept-aligned transfer,same dataset,0.499879,1.0,0.314042,ok,softdis vs softdis,
+softdis,pdbflex,pdbflex,derived soft disorder,structural flexibility/dynamics,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.149685,0.07709,,ceiling_not_above_baseline,softdis vs pdbflex,123212.0
+softdis,atlas,atlas,derived soft disorder,derived soft disorder,tests transfer between related disorder-like concepts,medium,0.596582,0.315038,27.180398,ok,softdis vs atlas,1558.0
+softdis,plddt,plddt,derived soft disorder,AlphaFold confidence proxy,tests transfer between related disorder-like concepts,high,0.784314,0.656777,1.388781,ok,softdis vs plddt,2521.0
+softdis,"disprot
+(AP)",disprot,derived soft disorder,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,high,0.87212,0.557933,,ceiling_not_above_baseline,softdis vs disprot,2642.0
+softdis,"disprot
+(AUROC)",disprot,derived soft disorder,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,high,0.917547,0.929907,0.929738,ok,softdis vs disprot,2642.0
+pdbflex,trizod,trizod,structural flexibility/dynamics,NMR chemical-shift disorder,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.286765,0.174514,,ceiling_not_above_baseline,trizod vs pdbflex,525.0
+pdbflex,chezod,chezod,structural flexibility/dynamics,NMR chemical-shift disorder,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.285551,,,missing_ceiling,,
+pdbflex,softdis,softdis,structural flexibility/dynamics,derived soft disorder,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.291659,0.07709,,ceiling_not_above_baseline,softdis vs pdbflex,123212.0
+pdbflex,pdbflex,pdbflex,structural flexibility/dynamics,structural flexibility/dynamics,same annotation definition; should be the most concept-aligned transfer,same dataset,0.395383,1.0,0.247948,ok,pdbflex vs pdbflex,
+pdbflex,atlas,atlas,structural flexibility/dynamics,derived soft disorder,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.349231,0.111006,,ceiling_not_above_baseline,pdbflex vs atlas,2587.0
+pdbflex,plddt,plddt,structural flexibility/dynamics,AlphaFold confidence proxy,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.519823,0.0115,,ceiling_not_above_baseline,pdbflex vs plddt,1412.0
+pdbflex,"disprot
+(AP)",disprot,structural flexibility/dynamics,curated binary disorder,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.519235,0.06913,,ceiling_not_above_baseline,pdbflex vs disprot,2335.0
+pdbflex,"disprot
+(AUROC)",disprot,structural flexibility/dynamics,curated binary disorder,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.737309,0.307951,,ceiling_not_above_baseline,pdbflex vs disprot,2335.0
+atlas,trizod,trizod,derived soft disorder,NMR chemical-shift disorder,tests transfer between weakly characterized or weakly overlapping annotation concepts,unknown/no-overlap,0.399847,,,missing_ceiling,,
+atlas,chezod,chezod,derived soft disorder,NMR chemical-shift disorder,tests transfer between related disorder-like concepts,medium,0.594801,0.220828,,ceiling_not_above_baseline,chezod vs atlas,372.0
+atlas,softdis,softdis,derived soft disorder,derived soft disorder,tests transfer between related disorder-like concepts,medium,0.309795,0.315038,0.88117,ok,softdis vs atlas,1558.0
+atlas,pdbflex,pdbflex,derived soft disorder,structural flexibility/dynamics,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.055761,0.111006,,ceiling_not_above_baseline,pdbflex vs atlas,2587.0
+atlas,atlas,atlas,derived soft disorder,derived soft disorder,same annotation definition; should be the most concept-aligned transfer,same dataset,0.708063,1.0,0.580379,ok,atlas vs atlas,
+atlas,plddt,plddt,derived soft disorder,AlphaFold confidence proxy,tests transfer between related disorder-like concepts,medium,0.718784,0.295052,,ceiling_not_above_baseline,atlas vs plddt,424.0
+atlas,"disprot
+(AP)",disprot,derived soft disorder,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.870035,,,missing_ceiling,,
+atlas,"disprot
+(AUROC)",disprot,derived soft disorder,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.9201,,,missing_ceiling,,
+plddt,trizod,trizod,AlphaFold confidence proxy,NMR chemical-shift disorder,tests whether direct NMR disorder aligns with AlphaFold low-confidence disorder proxy,medium,0.422638,0.504646,0.644895,ok,trizod vs plddt,283.0
+plddt,chezod,chezod,AlphaFold confidence proxy,NMR chemical-shift disorder,tests whether direct NMR disorder aligns with AlphaFold low-confidence disorder proxy,high,0.624582,0.691031,0.57011,ok,chezod vs plddt,1385.0
+plddt,softdis,softdis,AlphaFold confidence proxy,derived soft disorder,tests transfer between related disorder-like concepts,high,0.283637,0.656777,0.032968,ok,softdis vs plddt,2521.0
+plddt,pdbflex,pdbflex,AlphaFold confidence proxy,structural flexibility/dynamics,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.103985,0.0115,,ceiling_not_above_baseline,pdbflex vs plddt,1412.0
+plddt,atlas,atlas,AlphaFold confidence proxy,derived soft disorder,tests transfer between related disorder-like concepts,medium,0.512167,0.295052,,ceiling_not_above_baseline,atlas vs plddt,424.0
+plddt,plddt,plddt,AlphaFold confidence proxy,AlphaFold confidence proxy,same annotation definition; should be the most concept-aligned transfer,same dataset,0.838924,1.0,0.760041,ok,plddt vs plddt,
+plddt,"disprot
+(AP)",disprot,AlphaFold confidence proxy,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.874971,,,missing_ceiling,,
+plddt,"disprot
+(AUROC)",disprot,AlphaFold confidence proxy,curated binary disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.92718,,,missing_ceiling,,
+disprot,trizod,trizod,curated binary disorder,NMR chemical-shift disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.364121,,,missing_ceiling,,
+disprot,chezod,chezod,curated binary disorder,NMR chemical-shift disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.663372,,,missing_ceiling,chezod vs disprot,465.0
+disprot,softdis,softdis,curated binary disorder,derived soft disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,high,0.254746,0.488921,-0.074173,ok,softdis vs disprot,2642.0
+disprot,pdbflex,pdbflex,curated binary disorder,structural flexibility/dynamics,tests whether flexibility/dynamics can substitute for disorder; lecture predicts weak transfer,low,0.098709,-0.151455,,ceiling_not_above_baseline,pdbflex vs disprot,2335.0
+disprot,atlas,atlas,curated binary disorder,derived soft disorder,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.623971,,,missing_ceiling,,
+disprot,plddt,plddt,curated binary disorder,AlphaFold confidence proxy,tests whether continuous/proxy disorder ranks curated DisProt-positive residues,unknown/no-overlap,0.774079,,,missing_ceiling,,
+disprot,"disprot
+(AP)",disprot,curated binary disorder,curated binary disorder,same annotation definition; should be the most concept-aligned transfer,same dataset,0.935162,1.0,0.820162,ok,disprot vs disprot,
+disprot,"disprot
+(AUROC)",disprot,curated binary disorder,curated binary disorder,same annotation definition; should be the most concept-aligned transfer,same dataset,0.958705,1.0,0.832138,ok,disprot vs disprot,

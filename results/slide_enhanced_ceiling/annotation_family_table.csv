@@ -1,0 +1,8 @@
+dataset,annotation_family,directness_rank,lecture_based_meaning
+trizod,NMR chemical-shift disorder,1,Closest to direct residue-level physical disorder evidence.
+chezod,NMR chemical-shift disorder,1,Closest to direct residue-level physical disorder evidence.
+softdis,derived soft disorder,3,Derived disorder-like targets that may combine or approximate multiple signals.
+pdbflex,structural flexibility/dynamics,5,"B-factor/flexibility-like signal; related to motion, not identical to IDR biology."
+atlas,derived soft disorder,3,Derived disorder-like targets that may combine or approximate multiple signals.
+plddt,AlphaFold confidence proxy,4,"Low-confidence structure prediction used as a disorder-like proxy, not a direct experiment."
+disprot,curated binary disorder,2,"Manually curated disorder evidence, binary and function-aware but less continuous."

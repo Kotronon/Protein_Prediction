@@ -1,0 +1,4 @@
+expected_biological_similarity,n_pairs,median_observed_ceiling,mean_observed_ceiling,median_residue_overlap
+low,5,0.111006,0.13641219999999998,2335.0
+medium,6,0.323789,0.3582091666666667,398.0
+high,4,0.6739040000000001,0.68992325,1953.0

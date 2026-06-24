@@ -1,0 +1,19 @@
+strategy,label,mean_score,mean_normalized_headroom,mean_delta_vs_same_dataset_head
+best_individual_test_oracle,"Best individual
+(test oracle)",0.7131302133532539,0.557112996330943,0.002076077221139422
+validation_selected_single_head,"Validation-selected
+single head",0.7110541361321145,0.5526342615024393,0.0
+per_target_convex_validation,"Validation-fit
+convex",0.7111920788884163,0.5528986412999046,0.00013794275630182873
+per_target_ceiling_aware_validation,"Old broad
+compatibility weights",0.6656888946890831,0.47333002596290774,-0.04536524144303138
+per_target_ridge_stacking_validation,"Validation-fit
+ridge",0.7109389491379261,0.5505296801342161,-0.00011518699418836681
+exact_ceiling_weighted,"Exact-overlap
+anchored weights",0.6891237792757092,0.5215356384812865,-0.021930356856405202
+mmseqs95_ceiling_weighted,"Homology 95%
+anchored weights",0.688166163838269,0.5076913419951539,-0.022887972293845392
+mmseqs80_ceiling_weighted,"Homology 80%
+anchored weights",0.6888582914224455,0.5087670104545994,-0.022195844709669052
+blended_exact_mmseqs_bio_weighted,"Blended evidence
+anchored weights",0.6899505623539239,0.5109112155924139,-0.021103573778190485
