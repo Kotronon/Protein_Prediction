@@ -4,71 +4,16 @@
 from __future__ import annotations
 
 import argparse
-import re
 import sys
-from dataclasses import dataclass
 from pathlib import Path
+
+from protein_prediction_io import FastaRecord, read_fasta, safe_filename
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 IUPRED3_DIR = REPO_ROOT / "iupred3"
 sys.path.insert(0, str(IUPRED3_DIR))
 
 import iupred3_lib  # noqa: E402
-
-
-@dataclass(frozen=True)
-class FastaRecord:
-    header: str
-    sequence: str
-
-
-def extract_uniprot_accession(header: str) -> str:
-    first_token = header.lstrip(">").strip().split()[0]
-    parts = first_token.split("|")
-    if len(parts) >= 3 and parts[0] in {"sp", "tr"}:
-        return parts[1]
-    return first_token
-
-
-def safe_filename(value: str) -> str:
-    return re.sub(r"[^A-Za-z0-9_.-]+", "_", value).strip("_") or "sequence"
-
-
-def read_fasta(path: Path) -> list[FastaRecord]:
-    records: list[FastaRecord] = []
-    header: str | None = None
-    chunks: list[str] = []
-
-    def flush_record() -> None:
-        nonlocal header, chunks
-        if header is None:
-            return
-        sequence = "".join(chunks)
-        if not sequence:
-            raise ValueError(f"{path}: empty sequence for {header}")
-        records.append(FastaRecord(header=header, sequence=sequence))
-        header = None
-        chunks = []
-
-    with path.open(encoding="utf-8") as handle:
-        for line_number, raw_line in enumerate(handle, start=1):
-            line = raw_line.strip()
-            if not line:
-                continue
-            if line.startswith(">"):
-                flush_record()
-                header = line[1:].strip()
-                if not header:
-                    raise ValueError(f"{path}:{line_number}: empty FASTA header")
-            else:
-                if header is None:
-                    raise ValueError(f"{path}:{line_number}: sequence before first header")
-                chunks.append(line)
-
-    flush_record()
-    if not records:
-        raise ValueError(f"{path}: no FASTA records found")
-    return records
 
 
 def write_caid(
@@ -134,7 +79,7 @@ def main() -> None:
     print(f"IUPred3: loaded {total} FASTA records", flush=True)
 
     for index, record in enumerate(records, start=1):
-        protein_id = extract_uniprot_accession(record.header)
+        protein_id = record.uniprot_accession
         output_path = args.output_dir / f"{safe_filename(protein_id)}.caid"
 
         if output_path.exists() and not args.overwrite:

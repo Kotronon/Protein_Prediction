@@ -8,45 +8,13 @@ import csv
 from dataclasses import dataclass
 from pathlib import Path
 
+from protein_prediction_io import read_fasta_dict
+
 
 @dataclass(frozen=True)
 class MetapredictRecord:
     sequence: str | None
     scores: list[float]
-
-
-def read_fasta(path: Path) -> dict[str, str]:
-    records: dict[str, str] = {}
-    header: str | None = None
-    sequence_parts: list[str] = []
-
-    def flush() -> None:
-        nonlocal header, sequence_parts
-        if header is None:
-            return
-        if header in records:
-            raise ValueError(f"Duplicate FASTA header: {header!r}")
-        records[header] = "".join(sequence_parts)
-        header = None
-        sequence_parts = []
-
-    with path.open(encoding="utf-8") as handle:
-        for raw_line in handle:
-            line = raw_line.strip()
-            if not line:
-                continue
-            if line.startswith(">"):
-                flush()
-                header = line[1:].strip()
-            else:
-                if header is None:
-                    raise ValueError(f"{path}: sequence found before first FASTA header")
-                sequence_parts.append(line)
-
-    flush()
-    if not records:
-        raise ValueError(f"No FASTA records found in {path}")
-    return records
 
 
 def read_metapredict_csv(path: Path) -> dict[str, MetapredictRecord]:
@@ -91,7 +59,7 @@ def build_header_lookup(fasta_records: dict[str, str]) -> dict[str, str]:
 
 
 def convert(csv_path: Path, fasta_path: Path, output_path: Path) -> None:
-    fasta_records = read_fasta(fasta_path)
+    fasta_records = read_fasta_dict(fasta_path)
     predictions = read_metapredict_csv(csv_path)
     header_lookup = build_header_lookup(fasta_records)
 

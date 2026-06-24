@@ -12,67 +12,15 @@ from __future__ import annotations
 
 import argparse
 import csv
-from dataclasses import dataclass
 from pathlib import Path
 
+from protein_prediction_io import (
+    extract_uniprot_accession,
+    read_fasta,
+    write_wrapped_sequence,
+)
 
 CANONICAL_AA = set("ACDEFGHIKLMNPQRSTVWY")
-
-
-@dataclass(frozen=True)
-class FastaRecord:
-    header: str
-    sequence: str
-
-
-def read_fasta(path: Path) -> list[FastaRecord]:
-    records: list[FastaRecord] = []
-    header: str | None = None
-    sequence_parts: list[str] = []
-
-    def flush() -> None:
-        nonlocal header, sequence_parts
-        if header is None:
-            return
-        sequence = "".join(sequence_parts).upper()
-        if not sequence:
-            raise ValueError(f"{path}: empty sequence for {header}")
-        records.append(FastaRecord(header=header, sequence=sequence))
-        header = None
-        sequence_parts = []
-
-    with path.open(encoding="utf-8") as handle:
-        for raw_line in handle:
-            line = raw_line.strip()
-            if not line:
-                continue
-            if line.startswith(">"):
-                flush()
-                header = line[1:].strip()
-                if not header:
-                    raise ValueError(f"{path}: empty FASTA header")
-            else:
-                if header is None:
-                    raise ValueError(f"{path}: sequence before first FASTA header")
-                sequence_parts.append(line)
-
-    flush()
-    if not records:
-        raise ValueError(f"No FASTA records found in {path}")
-    return records
-
-
-def uniprot_accession(header: str) -> str:
-    first_token = header.split()[0]
-    parts = first_token.split("|")
-    if len(parts) >= 3 and parts[0] in {"sp", "tr"}:
-        return parts[1]
-    return first_token
-
-
-def write_wrapped_sequence(handle, sequence: str, width: int = 80) -> None:
-    for start in range(0, len(sequence), width):
-        handle.write(f"{sequence[start:start + width]}\n")
 
 
 def prepare_fasta(
@@ -83,7 +31,7 @@ def prepare_fasta(
     max_length: int,
     limit: int | None,
 ) -> None:
-    records = read_fasta(input_fasta)
+    records = read_fasta(input_fasta, uppercase=True)
     seen_ids: set[str] = set()
     kept = 0
     skipped_short = 0
@@ -109,7 +57,7 @@ def prepare_fasta(
         writer.writeheader()
 
         for record in records:
-            prepared_id = uniprot_accession(record.header)
+            prepared_id = extract_uniprot_accession(record.header)
             invalid_characters = "".join(sorted(set(record.sequence) - CANONICAL_AA))
             status = "kept"
 

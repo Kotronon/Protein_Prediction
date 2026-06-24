@@ -259,22 +259,26 @@ The matrix run skips completed prediction folders by default, so it can be resum
 
 ## What To Commit
 
-Commit source, notebooks, docs, configs, and final summary CSVs:
+Commit source, notebooks, docs, configs, and final analysis tables:
 
 ```bash
 git add README.md docs notebooks scripts requirements.txt .gitignore
-git add results/udonpred_matrix/matrix.csv
-git add results/udonpred_matrix/matrix_std.csv  # if created
+git add -f 'results/**/*.csv' 'results/**/*.json'
 ```
 
-Do not commit local environments, model caches, checkpoints, or generated prediction folders:
+Do not commit local environments, model caches, checkpoints, generated prediction
+folders, generated plots, or rendered report builds:
 
 ```text
 .venv/
 UdonPred/.venv/
 .cache/
 outputs/
-results/udonpred_matrix/predictions/
+results/**/predictions/
+results/**/*.caid
+results/**/*.png
+docs/contested_regions_report*.pdf
+docs/contested_regions_report*.tex
 ```
 
 These are ignored by `.gitignore`.

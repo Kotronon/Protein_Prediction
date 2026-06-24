@@ -5,54 +5,9 @@ from __future__ import annotations
 
 import argparse
 import csv
-from dataclasses import dataclass
 from pathlib import Path
 
-
-@dataclass(frozen=True)
-class FastaRecord:
-    header: str
-    sequence: str
-
-
-def read_fasta(path: Path) -> list[FastaRecord]:
-    records: list[FastaRecord] = []
-    header: str | None = None
-    sequence_parts: list[str] = []
-
-    def flush() -> None:
-        nonlocal header, sequence_parts
-        if header is None:
-            return
-        records.append(FastaRecord(header=header, sequence="".join(sequence_parts)))
-        header = None
-        sequence_parts = []
-
-    with path.open(encoding="utf-8") as handle:
-        for raw_line in handle:
-            line = raw_line.strip()
-            if not line:
-                continue
-            if line.startswith(">"):
-                flush()
-                header = line[1:].strip()
-                if not header:
-                    raise ValueError(f"{path}: empty FASTA header")
-            else:
-                if header is None:
-                    raise ValueError(f"{path}: sequence before first FASTA header")
-                sequence_parts.append(line)
-
-    flush()
-    if not records:
-        raise ValueError(f"No FASTA records found in {path}")
-    return records
-
-
-def write_record(handle, record: FastaRecord, width: int = 80) -> None:
-    handle.write(f">{record.header}\n")
-    for start in range(0, len(record.sequence), width):
-        handle.write(f"{record.sequence[start:start + width]}\n")
+from protein_prediction_io import FastaRecord, read_fasta, write_fasta_record
 
 
 def build_chunks(
@@ -109,7 +64,7 @@ def split_fasta(
         residues = sum(len(record.sequence) for record in chunk_records)
         with chunk_path.open("w", encoding="utf-8", newline="\n") as handle:
             for record in chunk_records:
-                write_record(handle, record)
+                write_fasta_record(handle, record)
         rows.append(
             {
                 "chunk": chunk_index,

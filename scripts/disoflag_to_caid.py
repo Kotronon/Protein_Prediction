@@ -4,8 +4,9 @@
 from __future__ import annotations
 
 import argparse
-import re
 from pathlib import Path
+
+from protein_prediction_io import extract_uniprot_accession, safe_filename, write_caid_scores
 
 
 SCORE_TYPES = {
@@ -17,18 +18,6 @@ SCORE_TYPES = {
     "lipid_binding": 5,
     "linker": 6,
 }
-
-
-def extract_protein_id(header: str) -> str:
-    first_token = header.lstrip(">").strip().split()[0]
-    parts = first_token.split("|")
-    if len(parts) >= 3 and parts[0] in {"sp", "tr"}:
-        return parts[1]
-    return first_token
-
-
-def safe_filename(value: str) -> str:
-    return re.sub(r"[^A-Za-z0-9._-]+", "_", value).strip("._") or "protein"
 
 
 def parse_scores(line: str, path: Path, line_number: int) -> list[float]:
@@ -72,7 +61,7 @@ def convert(input_path: Path, output_dir: Path, score_type: str) -> int:
             offset + 3 + score_index,
         )
 
-        protein_id = extract_protein_id(header)
+        protein_id = extract_uniprot_accession(header)
         if protein_id in seen_ids:
             raise ValueError(f"{input_path}: duplicate protein ID {protein_id!r}")
         seen_ids.add(protein_id)
@@ -83,13 +72,8 @@ def convert(input_path: Path, output_dir: Path, score_type: str) -> int:
                 f"{len(scores)} {score_type} scores"
             )
 
-        output_path = output_dir / f"{safe_filename(protein_id)}.caid"
-        with output_path.open("w", encoding="utf-8") as handle:
-            handle.write(f"{header}\n")
-            for position, (residue, score) in enumerate(
-                zip(sequence, scores), start=1
-            ):
-                handle.write(f"{position}\t{residue}\t{score:.6f}\n")
+        output_path = output_dir / f"{safe_filename(protein_id, fallback='protein')}.caid"
+        write_caid_scores(output_path, header, sequence, scores)
 
         written += 1
         offset += 9
