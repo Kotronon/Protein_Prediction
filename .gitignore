@@ -45,6 +45,11 @@ results/normalized_headroom/*
 !results/normalized_headroom/*.csv
 
 docs/lecture_slides/
+
+# Contested-region report outputs
+docs/contested_regions.md
+docs/contested_regions_report*.pdf
+docs/contested_regions_report*.tex
 !results/human_proteome/*.csv
 
 # prediction comparison
