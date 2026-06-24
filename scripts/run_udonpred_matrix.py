@@ -21,9 +21,10 @@ import pandas as pd
 import torch
 from torchmetrics.functional import auroc, average_precision, spearman_corrcoef
 
+from protein_prediction_config import NEGATED_UDONPRED_DATASETS, UDONPRED_DATASETS
 
-DATASETS = ["trizod", "chezod", "softdis", "pdbflex", "atlas", "plddt", "disprot"]
-NEGATED_DATASETS = {"plddt", "chezod"}
+DATASETS = list(UDONPRED_DATASETS)
+NEGATED_DATASETS = set(NEGATED_UDONPRED_DATASETS)
 
 
 def read_labels(path: Path) -> dict[str, list[float]]:

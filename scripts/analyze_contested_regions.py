@@ -29,9 +29,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from protein_prediction_config import NEGATED_UDONPRED_DATASETS, UDONPRED_DATASETS
 
-DATASETS = ["trizod", "chezod", "softdis", "pdbflex", "atlas", "plddt", "disprot"]
-NEGATED_PREDICTORS = {"chezod", "plddt"}
+DATASETS = list(UDONPRED_DATASETS)
+NEGATED_PREDICTORS = set(NEGATED_UDONPRED_DATASETS)
 MASK_VALUE = 999.0
 WINDOW_FEATURE_COLUMNS = [
     "hydropathy",

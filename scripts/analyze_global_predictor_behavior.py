@@ -27,13 +27,14 @@ from scipy.spatial.distance import squareform
 from scipy.stats import spearmanr
 
 from compare_predictors import load_predictions, maybe_negate_scores, parse_predictor_argument
+from protein_prediction_config import NEGATED_UDONPRED_DATASETS, UDONPRED_DATASETS
 
 
-UDONPRED_MODELS = {"trizod", "chezod", "softdis", "atlas", "plddt", "disprot"}
-ALL_UDONPRED_MODELS = UDONPRED_MODELS | {"pdbflex"}
+ALL_UDONPRED_MODELS = set(UDONPRED_DATASETS)
+UDONPRED_MODELS = ALL_UDONPRED_MODELS - {"pdbflex"}
 CAID_STYLE = {"DisPredict3", "DisoFLAG", "DisorderUnetLM", "PUNCH2_light"}
 CLASSICAL = {"SETH", "IUPred3", "ADOPT", "metapredict"}
-DEFAULT_NEGATED = {"chezod", "plddt", "adopt"}
+DEFAULT_NEGATED = {"adopt"} | set(NEGATED_UDONPRED_DATASETS)
 DEFAULT_PREDICTORS = {
     "trizod": Path("results/human_proteome/UdonPred/trizod"),
     "chezod": Path("results/human_proteome/UdonPred/chezod"),

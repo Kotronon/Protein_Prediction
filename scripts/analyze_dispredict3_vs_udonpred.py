@@ -29,10 +29,11 @@ from compare_predictors import (
     parse_predictor_argument,
     zscore,
 )
+from protein_prediction_config import NEGATED_UDONPRED_DATASETS, UDONPRED_DISORDER_MODELS
 
 
-UDONPRED_MODELS = ("trizod", "chezod", "softdis", "atlas", "plddt", "disprot")
-DEFAULT_NEGATED = {"adopt", "chezod", "plddt"}
+UDONPRED_MODELS = UDONPRED_DISORDER_MODELS
+DEFAULT_NEGATED = {"adopt"} | set(NEGATED_UDONPRED_DATASETS)
 DEFAULT_EXTERNAL_PREDICTORS = {
     "DisoFLAG": Path("results/human_proteome/DisoFLAG/caid"),
     "DisorderUnetLM": Path("results/human_proteome/DisorderUnetLM/disorder"),

@@ -38,11 +38,12 @@ from sklearn.metrics import average_precision_score, roc_auc_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from protein_prediction_config import NEGATED_UDONPRED_DATASETS, UDONPRED_DATASETS
 
-DATASETS = ["trizod", "chezod", "softdis", "pdbflex", "atlas", "plddt", "disprot"]
+DATASETS = list(UDONPRED_DATASETS)
 # These datasets have the opposite sign convention in the UdonPred evaluation:
 # after negation, larger labels consistently mean "more disorder".
-NEGATED_DATASETS = {"plddt", "chezod"}
+NEGATED_DATASETS = set(NEGATED_UDONPRED_DATASETS)
 # UdonPred uses 999 as a sentinel for residues without an evaluable label.
 MASK_VALUE = 999.0
 AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY"

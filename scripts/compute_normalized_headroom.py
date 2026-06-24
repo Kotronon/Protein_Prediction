@@ -26,8 +26,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from protein_prediction_config import UDONPRED_DATASETS
 
-DATASETS = ["trizod", "chezod", "softdis", "pdbflex", "atlas", "plddt", "disprot"]
+DATASETS = list(UDONPRED_DATASETS)
 METRIC_COLUMNS = [
     "trizod",
     "chezod",
