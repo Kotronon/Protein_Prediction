@@ -9,6 +9,7 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.uv-cache/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -16,6 +17,12 @@ __pycache__/
 # Hugging Face / model caches if created inside the repo
 .cache/
 huggingface/
+
+# Local notes / AI-assistant exports
+*_for_chatgpt.*
+*chatgpt*
+*ChatGPT*
+*.local.md
 
 # UdonPred generated outputs
 UdonPred/checkpoints/
