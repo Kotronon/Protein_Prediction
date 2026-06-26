@@ -143,6 +143,87 @@ To include bootstrap standard deviations:
 python scripts/run_udonpred_matrix.py --skip-predictions --bootstrap-samples 100
 ```
 
+## Prediction Improvement Pipeline
+
+Use one command to rerun the prediction-improvement workflow assembled from the
+current branches: UdonPred matrix, simple baselines, annotation ceiling,
+normalized headroom, validation-trained ensembles, and available global
+predictor diagnostics.
+
+```bash
+python scripts/run_prediction_pipeline.py --device cpu --skip-predictions
+```
+
+On a GPU machine, let missing predictions resume automatically:
+
+```bash
+python scripts/run_prediction_pipeline.py --device cuda --batch-size 2000
+```
+
+The pipeline writes the main decision outputs to:
+
+```text
+results/udonpred_matrix/matrix.csv
+results/simple_baselines/matrix.csv
+results/annotation_ceiling/annotation_ceiling_summary.csv
+results/normalized_headroom/normalized_headroom_summary.csv
+results/ensembles/ensemble_matrix.csv
+results/ensembles/ensemble_delta_vs_best_individual.csv
+results/ensembles/ensemble_summary.csv
+results/figures/prediction_improvement/
+```
+
+Useful flags:
+
+```bash
+python scripts/run_prediction_pipeline.py --dry-run
+python scripts/run_prediction_pipeline.py --reuse-existing --skip-predictions --skip-global-behavior
+python scripts/run_prediction_pipeline.py --reuse-existing --skip-predictions --skip-global-behavior --exclude-datasets atlas pdbflex
+python scripts/run_prediction_pipeline.py --reuse-existing --skip-global-behavior --replace-trizod-with-updated --exclude-datasets atlas pdbflex
+python scripts/run_prediction_pipeline.py --reuse-existing --skip-global-behavior --replace-trizod-with-updated --exclude-datasets atlas pdbflex --max-subset-size 3
+python scripts/run_prediction_pipeline.py --reuse-existing --skip-global-behavior --replace-trizod-with-updated --exclude-datasets atlas pdbflex --ensemble-focus-datasets disprot
+python scripts/run_prediction_pipeline.py --skip-predictions --skip-global-behavior
+python scripts/run_prediction_pipeline.py --device cuda --force-validation
+python scripts/run_prediction_pipeline.py --include-mmseqs
+python scripts/run_prediction_pipeline.py --skip-figures
+```
+
+Use `--replace-trizod-with-updated` to prepare `UdonPred/data/trizod_updated`
+from the local `trizod_updated/` release and use the
+`udonpred_analysis_extensions` ONNX head instead of the original TriZOD head.
+Combined with `--exclude-datasets atlas pdbflex`, the ensemble search only uses
+`trizod_updated`, `chezod`, `softdis`, `plddt`, and `disprot`.
+
+If you only want the ensemble step from existing test predictions:
+
+```bash
+python scripts/run_udonpred_ensembles.py --device cpu
+```
+
+The ensemble script generates missing validation predictions, fits simple mean,
+validation-selected single-head, convex-weight, ridge-stacking, and validation
+selected subset ensembles on validation labels, then evaluates them on the
+held-out test predictions. The chosen subset mixes and weights are written to
+`ensemble_subset_choices.csv`; use `--max-subset-size` to limit the largest
+predictor mix that is tried. Use `--ensemble-focus-datasets disprot` to fit and
+select global ensembles against DisProt validation labels while still reporting
+test performance on all active datasets.
+
+Create presentation figures from the resulting CSV files:
+
+```bash
+python scripts/plot_prediction_improvement.py
+```
+
+This writes:
+
+```text
+results/figures/prediction_improvement/ensemble_delta_heatmap.png
+results/figures/prediction_improvement/best_individual_vs_ensemble.png
+results/figures/prediction_improvement/baseline_udon_ensemble_ceiling.png
+results/figures/prediction_improvement/improvement_summary.csv
+```
+
 ## Simple Baselines
 
 Before interpreting the UdonPred matrix, run lightweight baselines that estimate

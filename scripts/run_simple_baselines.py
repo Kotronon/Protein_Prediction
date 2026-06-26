@@ -355,8 +355,15 @@ def write_matrix_csv(rows: list[dict[str, str | float]], path: Path) -> None:
             
 """Plot result matrix as a heatmap, saving the figure to disk."""
 def plot_matrix_heatmap(matrix: dict[str, dict[str, float]], path: Path) -> None:
-    import matplotlib.pyplot as plt
-    import seaborn as sns
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+    except ImportError as exc:
+        print(f"Skipping baseline heatmap because an optional plotting dependency is missing: {exc}")
+        return
 
     train_datasets = list(matrix.keys())
     test_datasets = [

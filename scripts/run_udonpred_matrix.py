@@ -19,11 +19,33 @@ from pathlib import Path
 
 import pandas as pd
 import torch
-from torchmetrics.functional import auroc, average_precision, spearman_corrcoef
+from scipy.stats import spearmanr
+from sklearn.metrics import average_precision_score, roc_auc_score
 
 
 DATASETS = ["trizod", "chezod", "softdis", "pdbflex", "atlas", "plddt", "disprot"]
 NEGATED_DATASETS = {"plddt", "chezod"}
+
+
+def to_numpy(values: torch.Tensor) -> list[float]:
+    return values.detach().cpu().numpy()
+
+
+def auroc(preds: torch.Tensor, labels: torch.Tensor, task: str = "binary") -> float:
+    del task
+    return float(roc_auc_score(to_numpy(labels).astype(int), to_numpy(preds)))
+
+
+def average_precision(preds: torch.Tensor, labels: torch.Tensor, task: str = "binary") -> float:
+    del task
+    return float(average_precision_score(to_numpy(labels).astype(int), to_numpy(preds)))
+
+
+def spearman_corrcoef(preds: torch.Tensor, labels: torch.Tensor) -> float:
+    if len(preds) < 2:
+        return float("nan")
+    value = spearmanr(to_numpy(preds), to_numpy(labels)).statistic
+    return float(value)
 
 
 def read_labels(path: Path) -> dict[str, list[float]]:
@@ -221,10 +243,19 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def validate_device(device: str) -> None:
+    if device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError(
+            "CUDA was requested, but torch.cuda.is_available() is False in this Python "
+            "environment. Use --device cpu here, or run on an NVIDIA/CUDA machine."
+        )
+
+
 def main() -> None:
     args = parse_args()
     udonpred_dir = args.udonpred_dir.resolve()
     output_dir = args.output_dir.resolve()
+    validate_device(args.device)
 
     if not args.skip_predictions:
         run_predictions(

@@ -1,0 +1,10 @@
+{
+  "source_dir": "trizod_updated",
+  "tier": "moderate",
+  "output_dir": "/Users/kathi/Uni/Master_Semester_3/ProteinPrediction/Protein_Prediction /UdonPred/data/trizod_updated",
+  "train_records": 3657,
+  "valid_records": 406,
+  "test_records": 344,
+  "valid_fraction": 0.1,
+  "seed": 13
+}

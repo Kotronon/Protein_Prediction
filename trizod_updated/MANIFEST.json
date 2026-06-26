@@ -1,0 +1,138 @@
+{
+  "version": "2026-06",
+  "pipeline_version": "trizod-2026-05-05",
+  "rereference_mode": "both",
+  "canonical_training_fasta": "train/<tier>/train_<tier>_best.fasta",
+  "tiers": {
+    "unfiltered": {
+      "scored_records": 16851,
+      "training_reps": 5927
+    },
+    "tolerant": {
+      "scored_records": 15433,
+      "training_reps": 5684
+    },
+    "moderate": {
+      "scored_records": 10107,
+      "training_reps": 4063
+    },
+    "strict": {
+      "scored_records": 3033,
+      "training_reps": 1254
+    }
+  },
+  "test_sets": {
+    "CheZOD117": 115,
+    "TriZOD_test": 344
+  },
+  "total_bytes": 127597151,
+  "n_files": 23,
+  "files": {
+    "README.md": {
+      "bytes": 2398,
+      "sha256": "312b405c39b435386744fd4b37fdd1301545a47fc755282010da6530e1dd230e"
+    },
+    "scores/moderate/scores.json": {
+      "bytes": 26542764,
+      "sha256": "a15f4e7ee37627a4195d703236978f610803b8a9018ab17f1b12fede6b15bcd3",
+      "n_records": 10107
+    },
+    "scores/strict/scores.json": {
+      "bytes": 8500630,
+      "sha256": "356c8a9ff96860ed2c387d49bb1ed70fbfd25c2eafdde8d827601e8959e1a531",
+      "n_records": 3033
+    },
+    "scores/tolerant/scores.json": {
+      "bytes": 39749991,
+      "sha256": "13300c956b75fe5d1ba294f14e5ee10d5044f543bde02a10fe6a78ff0e344ce0",
+      "n_records": 15433
+    },
+    "scores/unfiltered/scores.json": {
+      "bytes": 43010074,
+      "sha256": "0087e35edb9b2f05a8cef339b094ec8a7d88b0df67b97f25658aeb7015e845e6",
+      "n_records": 16851
+    },
+    "test/CheZOD117_test_set.fasta": {
+      "bytes": 15367,
+      "sha256": "c2f302c11877fbb2a4e170cd9954c9951c5bb358fb07b5253b493b01eedff67c",
+      "n_sequences": 115
+    },
+    "test/TriZOD_test_set.fasta": {
+      "bytes": 46927,
+      "sha256": "7e6ededf304e492cfa635d91cb2510483b0869f5f418aca236dbc1bcfdb441ba",
+      "n_sequences": 344
+    },
+    "train/moderate/clusters.tsv": {
+      "bytes": 127430,
+      "sha256": "1db17e022b3f6bba0ab27cb572ba445bda9b748cd34ad0fe712c2f63f19cab13"
+    },
+    "train/moderate/clusters_best.tsv": {
+      "bytes": 564024,
+      "sha256": "ff5049c611a3d37201ef4ce68048499b40c66b8e105f6b1ca5a2f0f262430c6e"
+    },
+    "train/moderate/train_moderate.fasta": {
+      "bytes": 854811,
+      "sha256": "a2f86a28c68a48567b88eeb25780ea5dedb9a2a5dcfcdf12dc9c7adf3d7f8b59",
+      "n_sequences": 4063
+    },
+    "train/moderate/train_moderate_best.fasta": {
+      "bytes": 748687,
+      "sha256": "db870e83f6c01aacc3e229f97741b3832b799160b9a88f4e32862147a5701373",
+      "n_sequences": 4063
+    },
+    "train/strict/clusters.tsv": {
+      "bytes": 37126,
+      "sha256": "36eccd5d86eb92f1d7f6e9fdb7d97c337aea2836f6fcf2e6f8bdd2bea5470f37"
+    },
+    "train/strict/clusters_best.tsv": {
+      "bytes": 154193,
+      "sha256": "dc8cb42a1ce103bfa676f5ad70ed9837f741b4519baa5e6d038f69a7fc998f4f"
+    },
+    "train/strict/train_strict.fasta": {
+      "bytes": 269632,
+      "sha256": "51a933e8673840c7494476245bcea18d94e65f1f7558c5ddbb7801c70d015ead",
+      "n_sequences": 1254
+    },
+    "train/strict/train_strict_best.fasta": {
+      "bytes": 236855,
+      "sha256": "b1d579923fde4bf2a282f9037e2cf270f99d80844c6978d031b6b292e31c5630",
+      "n_sequences": 1254
+    },
+    "train/tolerant/clusters.tsv": {
+      "bytes": 185070,
+      "sha256": "73127788e1ae08a4ff751b23e4f9b06c37caed2f8d743e2118465c135500defa"
+    },
+    "train/tolerant/clusters_best.tsv": {
+      "bytes": 845483,
+      "sha256": "0a96ed8ee4c5c80527b374b9ddd7fa9f83039eef2935c1a16bfc514fa1f4a47e"
+    },
+    "train/tolerant/train_tolerant.fasta": {
+      "bytes": 1204504,
+      "sha256": "5b086421366aa5adba3c2f0b1c002767fe6c206acbdb89850149a2b94a32689f",
+      "n_sequences": 5684
+    },
+    "train/tolerant/train_tolerant_best.fasta": {
+      "bytes": 1056076,
+      "sha256": "749190cb9b7556ce9c7bfa5000ccc19c986da808ba698e2f8d8d7c68aa4eee7b",
+      "n_sequences": 5684
+    },
+    "train/unfiltered/clusters.tsv": {
+      "bytes": 194908,
+      "sha256": "33f4d340cad5593851359b233bcc97fff26d704297fea3f212d9e31c43494d21"
+    },
+    "train/unfiltered/clusters_best.tsv": {
+      "bytes": 893604,
+      "sha256": "b560234440010f8aa40b9681d050cd5e1df81e0405f2fda7b247daab542ad424"
+    },
+    "train/unfiltered/train_unfiltered.fasta": {
+      "bytes": 1255672,
+      "sha256": "e7aab7e475e90dc06455de780f60fab58225770e338770a020951558c1e123cb",
+      "n_sequences": 5927
+    },
+    "train/unfiltered/train_unfiltered_best.fasta": {
+      "bytes": 1100925,
+      "sha256": "83f1f22bc4b374f50c3898fa4d18abda40a5e9a72238f97afb4e66a232ee5e30",
+      "n_sequences": 5927
+    }
+  }
+}

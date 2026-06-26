@@ -187,7 +187,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "protein_pearson",
-    "value": 0.980854657249145,
+    "value": 0.9808546572491449,
     "threshold_used": 0.5,
     "notes": ""
   },
@@ -651,7 +651,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.40931269591221475,
+    "value": 0.4093126959122148,
     "threshold_used": 0.5,
     "notes": "CheZOD labels negated following existing project convention"
   },
@@ -747,7 +747,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.6944186111680658,
+    "value": 0.6944186111680659,
     "threshold_used": 0.5,
     "notes": "pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention"
   },
@@ -811,7 +811,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "protein_pearson",
-    "value": 0.8877319639233132,
+    "value": 0.8877319639233131,
     "threshold_used": 0.5,
     "notes": "pLDDT converted to disorder score as 1 - pLDDT / 100; CheZOD labels negated following existing project convention"
   },
@@ -971,7 +971,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.07324597755598984,
+    "value": 0.07324597755598983,
     "threshold_used": 0.5,
     "notes": ""
   },
@@ -1035,7 +1035,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "protein_pearson",
-    "value": 0.04866469521424288,
+    "value": 0.048664695214242853,
     "threshold_used": 0.5,
     "notes": ""
   },
@@ -1291,7 +1291,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "protein_pearson",
-    "value": 0.6506915248956928,
+    "value": 0.6506915248956927,
     "threshold_used": 0.5,
     "notes": "pLDDT converted to disorder score as 1 - pLDDT / 100"
   },
@@ -1483,7 +1483,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.006635388517930231,
+    "value": 0.006635388517930232,
     "threshold_used": 0.5,
     "notes": ""
   },
@@ -1547,7 +1547,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "protein_pearson",
-    "value": 0.06073910652678694,
+    "value": 0.060739106526786935,
     "threshold_used": 0.5,
     "notes": ""
   },
@@ -1611,7 +1611,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.0884028068666073,
+    "value": 0.08840280686660731,
     "threshold_used": 0.5,
     "notes": "pLDDT converted to disorder score as 1 - pLDDT / 100"
   },
@@ -1803,7 +1803,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "binary",
     "metric": "protein_pearson",
-    "value": 0.588328258923407,
+    "value": 0.5883282589234071,
     "threshold_used": 0.5,
     "notes": ""
   },
@@ -1867,7 +1867,7 @@
     "annotation_type_a": "continuous",
     "annotation_type_b": "continuous",
     "metric": "pearson",
-    "value": 0.5147555840252311,
+    "value": 0.5147555840252312,
     "threshold_used": 0.5,
     "notes": "pLDDT converted to disorder score as 1 - pLDDT / 100"
   },

@@ -41,6 +41,16 @@ The strongest explanation for the observed differences is a combination of targe
 
 The main conclusion is that the predictors learn a common core signal associated with disorder, but they operationalize different biological and experimental definitions around that core. Benchmark performance, correlation with other predictors, and biological interpretability are therefore three separate questions and must not be treated as interchangeable.
 
+### Quick reader's guide
+
+The report uses three separate ideas that should not be conflated:
+
+- **Agreement:** two predictors rank residues or proteins similarly. This is measured mainly with Spearman correlation, top-decile overlap, and high-score residue overlap.
+- **Calibration:** two predictors attach comparable numerical meanings to their scores. This is not guaranteed, even when both scores are bounded or both are oriented as higher = more disorder-like.
+- **Accuracy:** a predictor matches an independent experimental reference. The human-proteome comparison does not directly measure this because it has no complete proteome-wide ground truth.
+
+Thus, a low-agreement predictor is not automatically wrong. It may be accurate for a different benchmark target, use a different score calibration, or emphasize a biologically distinct subset of disorder-like residues.
+
 ---
 
 ## 1. Scientific Background
@@ -286,6 +296,12 @@ The main methodological lesson is that shared architecture increases agreement b
 
 The “classical external” label is a descriptive category rather than a coherent cluster. metapredict joins the broad consensus core, SETH and ADOPT are close to NMR-related models, and IUPred3 remains more isolated. This reinforces that grouping by publication era or external/internal status is less informative than grouping by training objective and representation.
 
+![Take-home map of predictor groups](images/predictor_comparison/predictor_group_takehome.png)
+
+*Supplementary Figure A. Simplified map of the main predictor relationships. The diagram compresses the heatmaps and clustering into three interpretive groups: a broad consensus/NMR-UdonPred core, a CAID-style subgroup, and the complementary energy-based IUPred3 view.*
+
+The simplified map is useful for reading the rest of the report. The UdonPred-centered consensus and the CAID-style subgroup are not disconnected; their mean protein-level agreement is still positive and substantial. The important point is that the relationships are **structured**: DisPredict3 is not equally distant from all methods, and IUPred3 is independent for a different methodological reason.
+
 ---
 
 ## 7. Extreme Protein Rankings
@@ -377,7 +393,20 @@ Residue-set Jaccard values are about 0.33 for DisorderUnetLM, 0.30 for DisoFLAG,
 
 This is strong evidence that DisPredict3's distinctness is not an artifact of choosing 0.5 or of using incompatible output scales. It identifies a genuinely different subset of residues as most disorder-like.
 
-### 8.5 Why strong CAID performance does not imply consensus behavior
+### 8.5 Concrete protein examples
+
+![Concrete protein examples showing ranking and local-profile disagreement](images/predictor_comparison/example_protein_profiles.png)
+
+*Supplementary Figure B. Two proteins selected from the common predictor intersection to illustrate how the global patterns appear at sequence level. Residue curves show smoothed within-predictor score percentiles, so all predictors are compared on rank-normalized scales. Bars show each protein's mean-score percentile within each predictor or predictor group.*
+
+The two examples show why both protein-level and residue-level views are needed:
+
+- **Q3KQU3** is ranked highly by the consensus group but very low by DisPredict3. Its local consensus profile stays high over much of the sequence, while DisPredict3 assigns lower relative residue percentiles. This is the practical form of a consensus-high / DisPredict3-low disagreement.
+- **P29762** shows the opposite pattern. DisPredict3 assigns a near-top protein-level percentile and high residue percentiles across most of the sequence, while the consensus group ranks the protein very low. This is the kind of case where a DisPredict3-driven candidate list would differ strongly from a consensus-driven list.
+
+These examples are not presented as ground truth cases. They are diagnostic examples: they make visible how differences in target definition, calibration, and segmentation can change the biological hypothesis generated from the same protein sequence.
+
+### 8.6 Why strong CAID performance does not imply consensus behavior
 
 DisPredict3 was designed and evaluated for benchmark discrimination, including CAID Disorder-NOX. Several factors separate this task from the present comparison:
 
@@ -708,6 +737,7 @@ The analysis is generated from the following repository components:
 - `scripts/analyze_dispredict3_vs_udonpred.py`
 - `scripts/diagnose_dispredict3_disagreements.py`
 - `scripts/analyze_global_predictor_behavior.py`
+- `scripts/plot_predictor_report_supplements.py`
 - `notebooks/05_predictor_agreement.ipynb`
 
 Principal result tables are stored under:

@@ -1,7 +1,7 @@
 test_metric,best_udon_training_dataset,best_udon_score,same_dataset_udon_score,best_simple_baseline,best_simple_baseline_train_dataset,best_simple_baseline_score,best_udon_annotation_ceiling,best_udon_available_headroom,best_udon_raw_headroom,best_udon_normalized_headroom,best_udon_status,same_dataset_annotation_ceiling,same_dataset_available_headroom,same_dataset_raw_headroom,same_dataset_normalized_headroom,same_dataset_status,best_normalized_training_dataset,best_normalized_headroom
 trizod,trizod,0.507853,0.507853,coil_propensity,none_coil,0.273706,1.000000,0.726294,0.234147,0.322386,ok,1.000000,0.726294,0.234147,0.322386,ok,chezod,1.020478
 chezod,trizod,0.707732,0.691124,aa_composition_logreg,disprot_composition,0.536459,0.481978,-0.054481,0.171273,,ceiling_not_above_baseline,1.000000,0.463541,0.154665,0.333660,ok,plddt,0.570110
-softdis,softdis,0.499879,0.499879,hydrophobicity_propensity,none_hydro,0.270916,1.000000,0.729084,0.228963,0.314042,ok,1.000000,0.729084,0.228963,0.314042,ok,atlas,0.881170
+softdis,softdis,0.653220,0.653220,hydrophobicity_propensity,none_hydro,0.270916,1.000000,0.729084,0.382304,0.524362,ok,1.000000,0.729084,0.382304,0.524362,ok,atlas,4.161212
 pdbflex,pdbflex,0.395383,0.395383,aa_composition_logreg,pdbflex_composition,0.196044,1.000000,0.803956,0.199339,0.247948,ok,1.000000,0.803956,0.199339,0.247948,ok,pdbflex,0.247948
 atlas,atlas,0.708063,0.708063,aa_composition_logreg,softdis_composition,0.304284,1.000000,0.695716,0.403779,0.580379,ok,1.000000,0.695716,0.403779,0.580379,ok,softdis,27.180398
 plddt,plddt,0.838924,0.838924,aa_composition_logreg,plddt_composition,0.328734,1.000000,0.671266,0.510190,0.760041,ok,1.000000,0.671266,0.510190,0.760041,ok,trizod,2.217450

@@ -20,7 +20,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from matplotlib.patches import Patch
 from scipy.cluster.hierarchy import leaves_list, linkage
 from scipy.spatial.distance import squareform
@@ -58,6 +57,15 @@ GROUP_COLORS = {
 }
 LENGTH_BINS = [0, 200, 500, 1000, np.inf]
 LENGTH_LABELS = ["<200", "200-499", "500-999", ">=1000"]
+
+
+def optional_seaborn():
+    try:
+        import seaborn as sns
+    except ImportError as exc:
+        print(f"Skipping seaborn plot because an optional plotting dependency is missing: {exc}")
+        return None
+    return sns
 
 
 def predictor_group(name: str) -> str:
@@ -100,6 +108,9 @@ def cluster_order(matrix: pd.DataFrame) -> list[str]:
 def plot_cluster(matrix: pd.DataFrame, metric_label: str, output: Path) -> list[str]:
     tree = cluster_tree(matrix)
     order = matrix.index[leaves_list(tree)].tolist()
+    sns = optional_seaborn()
+    if sns is None:
+        return order
     row_colors = pd.Series(
         [GROUP_COLORS[predictor_group(name)] for name in matrix.index], index=matrix.index
     )
@@ -327,6 +338,9 @@ def binned_predictor_scores(means: pd.DataFrame, lengths: pd.Series) -> pd.DataF
 
 
 def plot_binned_predictor_scores(rows: pd.DataFrame, output: Path) -> None:
+    sns = optional_seaborn()
+    if sns is None:
+        return
     groups = ["UdonPred", "CAID-style external", "classical external"]
     fig, axes = plt.subplots(1, 3, figsize=(17, 5), sharey=True)
     for ax, group in zip(axes, groups):
@@ -356,6 +370,9 @@ def plot_length_effects(
     protein_table: pd.DataFrame,
     output: Path,
 ) -> None:
+    sns = optional_seaborn()
+    if sns is None:
+        return
     fig, axes = plt.subplots(1, 3, figsize=(17, 5))
     ordered = predictor_effects.sort_values("length_vs_mean_score_spearman")
     axes[0].barh(
