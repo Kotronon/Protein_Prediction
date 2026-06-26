@@ -1,0 +1,39 @@
+cuda_devices: 0
+run_name: caid4_disprot_trizod_updated_focus
+deepspeed_zero: false
+num_train_epochs: 25
+early_stopping: 20
+checkpoint: false
+logging:
+  logging_steps: 5
+  eval_steps: 100
+  eval_strategy: steps
+saving:
+  save_steps: 100
+input_dim: 1024
+output_dim: 1
+max_single_batch_size: 2
+heads:
+- out
+pre:
+  out: []
+post:
+  out:
+  - - torch.nn.Sigmoid
+    - {}
+outputs:
+- out_-1
+cluster: false
+filter: false
+hyperparameter_path: architecture.yaml
+backbone:
+  name: Rostlab/ProstT5_fp16
+  tokeniser_type: T5Tokenizer
+  model_type: T5EncoderModel
+  prefix_token: <AA2fold>
+  preprocessing_batch_size: 8
+optim:
+  backend: optuna
+  n_trials: 2
+  timeout: 72000
+  direction: minimize
