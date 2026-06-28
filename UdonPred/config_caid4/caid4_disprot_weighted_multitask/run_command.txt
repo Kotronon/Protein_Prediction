@@ -1,0 +1,2 @@
+cd UdonPred
+uv run python run.py train --config-dir config_caid4/caid4_disprot_weighted_multitask --output-dir checkpoints_caid4 --optimised-parameters-dir optimised_parameters_caid4

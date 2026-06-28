@@ -153,6 +153,9 @@ class Embedder(PreTrainedModel):
                 input_ids, attention_mask=attention_mask
             ).last_hidden_state.cpu()
 
+        if device.type == "mps":
+            torch.mps.empty_cache()
+
         return embedding_rpr
 
     def forward(self, input_ids, attention_mask):

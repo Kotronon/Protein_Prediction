@@ -1,5 +1,5 @@
 cuda_devices: 0
-run_name: caid4_disprot_trizod_updated_focus
+run_name: caid4_disprot_only
 deepspeed_zero: false
 num_train_epochs: 25
 early_stopping: 20

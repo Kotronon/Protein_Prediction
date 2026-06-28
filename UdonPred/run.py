@@ -150,7 +150,7 @@ def train_model(config, datasets, collator):
     }
     training_arguments["remove_unused_columns"] = False
     training_arguments["report_to"] = (
-        "wandb" if "wandb" in config["config"].keys() else None
+        "wandb" if "wandb" in config["config"].keys() else "none"
     )
     training_arguments["output_dir"] = (
         f"{OUTPUT_DIR}/{config['config']['run_name']}"
@@ -195,7 +195,7 @@ def run_optimisation(config, datasets, collator):
     """
     training_arguments = {
         "remove_unused_columns": False,
-        "report_to": "wandb" if "wandb" in config["config"].keys() else None,
+        "report_to": "wandb" if "wandb" in config["config"].keys() else "none",
         "output_dir": f"{OUTPUT_DIR}/{config['config']['run_name']}",
         "per_device_eval_batch_size": config["config"]["max_single_batch_size"],
         "no_cuda": False,

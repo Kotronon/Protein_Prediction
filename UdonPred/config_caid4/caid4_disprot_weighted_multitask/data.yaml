@@ -1,0 +1,162 @@
+trizod:
+  path: data/trizod
+  fraction: 0
+  losses:
+    y:
+    - class: model.losses.MSE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+      weight: 1
+  metrics:
+    y:
+    - class: model.losses.MAE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+    - class: model.losses.Spearman
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+chezod:
+  path: data/chezod
+  fraction: 1
+  losses:
+    y:
+    - class: model.losses.MSE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+      weight: 0.1
+  metrics:
+    y:
+    - class: model.losses.MAE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+    - class: model.losses.Spearman
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+disprot:
+  path: data/disprot
+  fraction: 1
+  losses:
+    y:
+    - class: model.losses.BCE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+      weight: 5
+  metrics:
+    y:
+    - class: model.losses.AUPR
+      output: out_-1
+      class_arguments:
+        threshold: 0.5
+      arguments: []
+    - class: model.losses.AUROC
+      output: out_-1
+      class_arguments:
+        threshold: 0.5
+      arguments: []
+pdbflex:
+  path: data/pdbflex
+  fraction: 0
+  losses:
+    y:
+    - class: model.losses.MSE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+      weight: 1
+  metrics:
+    y:
+    - class: model.losses.MAE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+    - class: model.losses.Spearman
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+plddt:
+  path: data/plddt
+  fraction: 1
+  losses:
+    y:
+    - class: model.losses.MSE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+      weight: 0.1
+  metrics:
+    y:
+    - class: model.losses.MAE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+    - class: model.losses.Spearman
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+softdis:
+  path: data/softdis
+  fraction: 1
+  losses:
+    y:
+    - class: model.losses.MSE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+      weight: 0.1
+  metrics:
+    y:
+    - class: model.losses.MAE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+    - class: model.losses.Spearman
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+atlas:
+  path: data/atlas
+  fraction: 0
+  losses:
+    y:
+    - class: model.losses.MSE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+      weight: 1
+  metrics:
+    y:
+    - class: model.losses.MAE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+    - class: model.losses.Spearman
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+trizod_updated:
+  path: data/trizod_updated
+  fraction: 1
+  losses:
+    y:
+    - class: model.losses.MSE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+      weight: 0.1
+  metrics:
+    y:
+    - class: model.losses.MAE
+      output: out_-1
+      class_arguments: {}
+      arguments: []
+    - class: model.losses.Spearman
+      output: out_-1
+      class_arguments: {}
+      arguments: []
