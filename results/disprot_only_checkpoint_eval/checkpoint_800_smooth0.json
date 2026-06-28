@@ -1,0 +1,10 @@
+{
+  "n_residues": 99239,
+  "n_positive": 31401,
+  "positive_fraction": 0.3164179405274136,
+  "disprot_AP": 0.9321696279931518,
+  "disprot_AUROC": 0.956584104425776,
+  "checkpoint_dir": "UdonPred/checkpoints_caid4/caid4_disprot_only/checkpoint-800",
+  "split": "test",
+  "smooth": 0.0
+}

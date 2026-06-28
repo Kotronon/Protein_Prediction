@@ -38,3 +38,6 @@ results/annotation_ceiling/*
 !results/normalized_headroom/
 results/normalized_headroom/*
 !results/normalized_headroom/*.csv
+UdonPred/checkpoints_caid4/
+UdonPred/optimised_parameters_caid4/
+UdonPred/data/*/hf/

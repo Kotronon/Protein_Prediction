@@ -150,7 +150,7 @@ def train_model(config, datasets, collator):
     }
     training_arguments["remove_unused_columns"] = False
     training_arguments["report_to"] = (
-        "wandb" if "wandb" in config["config"].keys() else None
+        "wandb" if "wandb" in config["config"].keys() else "none"
     )
     training_arguments["output_dir"] = (
         f"{OUTPUT_DIR}/{config['config']['run_name']}"
@@ -195,7 +195,7 @@ def run_optimisation(config, datasets, collator):
     """
     training_arguments = {
         "remove_unused_columns": False,
-        "report_to": "wandb" if "wandb" in config["config"].keys() else None,
+        "report_to": "wandb" if "wandb" in config["config"].keys() else "none",
         "output_dir": f"{OUTPUT_DIR}/{config['config']['run_name']}",
         "per_device_eval_batch_size": config["config"]["max_single_batch_size"],
         "no_cuda": False,
@@ -247,17 +247,37 @@ def run_optimisation(config, datasets, collator):
         yaml.dump(best_run.hyperparameters, f)
 
 
-def main(mode: str):
+def main(
+    mode: str,
+    config_dir: str = CONFIG_DIR,
+    output_dir: str = OUTPUT_DIR,
+    optimised_parameters_dir: str = OPTIMISED_PARAMETERS_DIR,
+):
     """Main execution function.
     
     Args:
         mode: Either 'train' or 'optimise'
     """
+    global CONFIG_DIR, OUTPUT_DIR, OPTIMISED_PARAMETERS_DIR
+    CONFIG_DIR = config_dir
+    OUTPUT_DIR = output_dir
+    OPTIMISED_PARAMETERS_DIR = optimised_parameters_dir
+
     config = {}
     for file in os.listdir(CONFIG_DIR):
         name = file.replace(".yaml", "")
         with open(f"{CONFIG_DIR}/{file}", "r") as f:
             config[name] = yaml.safe_load(f)
+
+    hyperparameter_path = config["config"].get("hyperparameter_path")
+    if hyperparameter_path and not os.path.isabs(hyperparameter_path):
+        candidate = os.path.join(CONFIG_DIR, hyperparameter_path)
+        if os.path.exists(candidate):
+            config["config"]["hyperparameter_path"] = candidate
+        else:
+            config["config"]["hyperparameter_path"] = os.path.join(
+                CONFIG_DIR, os.path.basename(hyperparameter_path)
+            )
 
     sys.modules["config"] = config
 
@@ -287,6 +307,21 @@ if __name__ == "__main__":
         choices=["train", "optimise"],
         help="Mode to run: 'train' for training or 'optimise' for hyperparameter optimization"
     )
+    parser.add_argument(
+        "--config-dir",
+        default=CONFIG_DIR,
+        help="Directory containing config.yaml, data.yaml, architecture.yaml, and optimise.yaml",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=OUTPUT_DIR,
+        help="Directory where checkpoints are written",
+    )
+    parser.add_argument(
+        "--optimised-parameters-dir",
+        default=OPTIMISED_PARAMETERS_DIR,
+        help="Directory where optimisation results are written",
+    )
     
     args = parser.parse_args()
-    main(args.mode)
+    main(args.mode, args.config_dir, args.output_dir, args.optimised_parameters_dir)

@@ -1,0 +1,5 @@
+strategy,best_checkpoint,step,disprot_AP,disprot_AUROC,delta_AP_vs_baseline,delta_AUROC_vs_baseline
+Original DisProt head,pretrained ONNX,,0.935162,0.958705,0.0,0.0
+Equal multitask,UdonPred/checkpoints_caid4/caid4_disprot_trizod_updated_focus/checkpoint-1200,1200,0.8847426848235111,0.91058737093124,-0.0504193151764889,-0.04811762906876005
+DisProt-only,UdonPred/checkpoints_caid4/caid4_disprot_only/checkpoint-800,800,0.9379247397362948,0.9607118589889544,0.002762739736294706,0.002006858988954363
+Weighted multitask,UdonPred/checkpoints_caid4/caid4_disprot_weighted_multitask/checkpoint-600,600,0.9025991891836564,0.9274893845900436,-0.0325628108163436,-0.031215615409956432

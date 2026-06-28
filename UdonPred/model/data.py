@@ -338,25 +338,40 @@ def add_missing_features(datasets: List[DatasetDict]) -> List[DatasetDict]:
     Returns:
         List[DatasetDict]: Datasets with consistent features.
     """
-    feature_types: Dict[str, Any] = {}
+    feature_defaults: Dict[str, Any] = {}
     for dataset in datasets:
         for split in dataset.keys():
             features = dataset[split].features
             for feature_name, feature_def in features.items():
                 current_def = feature_def
+                is_sequence = not isinstance(current_def, datasets_features.Value)
                 while not isinstance(current_def, datasets_features.Value):
                     if hasattr(current_def, "feature"):
                         current_def = current_def.feature
                     else:
                         break  
                 if hasattr(current_def, "dtype"):
-                    feature_types[feature_name] = current_def.dtype
+                    dtype = current_def.dtype
+                    if is_sequence:
+                        feature_defaults[feature_name] = (
+                            [] if dtype == "string" else np.array([], dtype=dtype)
+                        )
+                    elif dtype == "string":
+                        feature_defaults[feature_name] = ""
+                    elif dtype.startswith("int"):
+                        feature_defaults[feature_name] = 0
+                    elif dtype.startswith("float"):
+                        feature_defaults[feature_name] = 0.0
+                    elif dtype == "bool":
+                        feature_defaults[feature_name] = False
+                    else:
+                        feature_defaults[feature_name] = None
 
     for dataset in datasets:
         existing_features = set().union(
             *(set(dataset[s].features.keys()) for s in dataset.keys())
         )
-        missing_features = set(feature_types.keys()) - existing_features
+        missing_features = set(feature_defaults.keys()) - existing_features
 
         if not missing_features:
             continue
@@ -366,7 +381,7 @@ def add_missing_features(datasets: List[DatasetDict]) -> List[DatasetDict]:
             out = {}
             for feature in missing_features:
                 out[feature] = [
-                    np.array([], dtype=feature_types[feature]) for _ in range(batch_len)
+                    feature_defaults[feature] for _ in range(batch_len)
                 ]
             return out
 
