@@ -1,0 +1,313 @@
+architecture:
+  activation_0: torch.nn.LeakyReLU
+  activation_1: torch.nn.LeakyReLU
+  batch_size: 64
+  dim_0: 256
+  dim_1: 64
+  dropout_0: 0.4
+  dropout_1: 0.4
+  layer_0: torch.nn.Linear
+  layer_1: torch.nn.Linear
+  learning_rate: 0.001
+  lr_scheduler: constant
+  n_layers: 2
+config:
+  backbone:
+    model_type: T5EncoderModel
+    name: Rostlab/ProstT5_fp16
+    prefix_token: <AA2fold>
+    preprocessing_batch_size: 1
+    tokeniser_type: T5Tokenizer
+  checkpoint: false
+  cluster: false
+  cuda_devices: 0
+  deepspeed_zero: false
+  early_stopping: 20
+  filter: false
+  heads:
+  - out
+  hyperparameter_path: config_caid4/caid4_disprot_only/architecture.yaml
+  input_dim: 1024
+  logging:
+    eval_steps: 100
+    eval_strategy: steps
+    logging_steps: 5
+  max_single_batch_size: 2
+  num_train_epochs: 25
+  optim:
+    backend: optuna
+    direction: minimize
+    n_trials: 2
+    timeout: 72000
+  output_dim: 1
+  outputs:
+  - out_-1
+  post:
+    out:
+    - - torch.nn.Sigmoid
+      - {}
+  pre:
+    out: []
+  run_name: caid4_disprot_only
+  saving:
+    save_steps: 100
+data:
+  atlas:
+    fraction: 0
+    losses:
+      y:
+      - arguments: []
+        class: model.losses.MSE
+        class_arguments: {}
+        output: out_-1
+        weight: 1
+    metrics:
+      y:
+      - arguments: []
+        class: model.losses.MAE
+        class_arguments: {}
+        output: out_-1
+      - arguments: []
+        class: model.losses.Spearman
+        class_arguments: {}
+        output: out_-1
+    path: data/atlas
+  chezod:
+    fraction: 0
+    losses:
+      y:
+      - arguments: []
+        class: model.losses.MSE
+        class_arguments: {}
+        output: out_-1
+        weight: 1
+    metrics:
+      y:
+      - arguments: []
+        class: model.losses.MAE
+        class_arguments: {}
+        output: out_-1
+      - arguments: []
+        class: model.losses.Spearman
+        class_arguments: {}
+        output: out_-1
+    path: data/chezod
+  disprot:
+    fraction: 1
+    losses:
+      y:
+      - arguments: []
+        class: model.losses.BCE
+        class_arguments: {}
+        output: out_-1
+        weight: 1
+    metrics:
+      y:
+      - arguments: []
+        class: model.losses.AUPR
+        class_arguments:
+          threshold: 0.5
+        output: out_-1
+      - arguments: []
+        class: model.losses.AUROC
+        class_arguments:
+          threshold: 0.5
+        output: out_-1
+    path: data/disprot
+  pdbflex:
+    fraction: 0
+    losses:
+      y:
+      - arguments: []
+        class: model.losses.MSE
+        class_arguments: {}
+        output: out_-1
+        weight: 1
+    metrics:
+      y:
+      - arguments: []
+        class: model.losses.MAE
+        class_arguments: {}
+        output: out_-1
+      - arguments: []
+        class: model.losses.Spearman
+        class_arguments: {}
+        output: out_-1
+    path: data/pdbflex
+  plddt:
+    fraction: 0
+    losses:
+      y:
+      - arguments: []
+        class: model.losses.MSE
+        class_arguments: {}
+        output: out_-1
+        weight: 1
+    metrics:
+      y:
+      - arguments: []
+        class: model.losses.MAE
+        class_arguments: {}
+        output: out_-1
+      - arguments: []
+        class: model.losses.Spearman
+        class_arguments: {}
+        output: out_-1
+    path: data/plddt
+  softdis:
+    fraction: 0
+    losses:
+      y:
+      - arguments: []
+        class: model.losses.MSE
+        class_arguments: {}
+        output: out_-1
+        weight: 1
+    metrics:
+      y:
+      - arguments: []
+        class: model.losses.MAE
+        class_arguments: {}
+        output: out_-1
+      - arguments: []
+        class: model.losses.Spearman
+        class_arguments: {}
+        output: out_-1
+    path: data/softdis
+  trizod:
+    fraction: 0
+    losses:
+      y:
+      - arguments: []
+        class: model.losses.MSE
+        class_arguments: {}
+        output: out_-1
+        weight: 1
+    metrics:
+      y:
+      - arguments: []
+        class: model.losses.MAE
+        class_arguments: {}
+        output: out_-1
+      - arguments: []
+        class: model.losses.Spearman
+        class_arguments: {}
+        output: out_-1
+    path: data/trizod
+  trizod_updated:
+    fraction: 0
+    losses:
+      y:
+      - arguments: []
+        class: model.losses.MSE
+        class_arguments: {}
+        output: out_-1
+        weight: 1
+    metrics:
+      y:
+      - arguments: []
+        class: model.losses.MAE
+        class_arguments: {}
+        output: out_-1
+      - arguments: []
+        class: model.losses.Spearman
+        class_arguments: {}
+        output: out_-1
+    path: data/trizod_updated
+hyperparameters:
+  activation_0: torch.nn.LeakyReLU
+  activation_1: torch.nn.LeakyReLU
+  batch_size: 64
+  dim_0: 256
+  dim_1: 64
+  dropout_0: 0.4
+  dropout_1: 0.4
+  gradient_accumulation_steps: 32
+  layer_0: torch.nn.Linear
+  layer_1: torch.nn.Linear
+  learning_rate: 0.001
+  lr_scheduler: constant
+  n_layers: 2
+  per_device_train_batch_size: 2
+optimise:
+  activation_type:
+    type: categorical
+    values:
+    - torch.nn.LeakyReLU
+    - torch.nn.ReLU
+    - torch.nn.Tanh
+    - null
+  batch_size:
+    type: int
+    values:
+    - 1
+    - 128
+  dropout_rate:
+    type: float
+    values:
+    - 0.0
+    - 1.0
+  fp16:
+    type: categorical
+    values:
+    - false
+  layer_params:
+    model.layers.CNNLayer:
+      kernel_size:
+        type: categorical
+        values:
+        - 3
+        - 5
+        - 7
+        - 9
+        - 15
+        - 21
+    torch.nn.Linear: {}
+  layer_size:
+    type: int
+    values:
+    - 4
+    - 2048
+  layer_type:
+    type: categorical
+    values:
+    - torch.nn.Linear
+    - model.layers.CNNLayer
+  learning_rate:
+    type: float
+    values:
+    - 0.0001
+    - 0.01
+  lora:
+    finetune:
+      type: bool
+      values:
+      - false
+    lora_alpha:
+      type: int
+      values:
+      - 1
+      - 16
+    lora_dropout:
+      type: float
+      values:
+      - 0.0
+      - 1.0
+    r:
+      type: int
+      values:
+      - 4
+      - 16
+  lr_scheduler:
+    type: categorical
+    values:
+    - cosine
+    - reduce_lr_on_plateau
+    - constant
+  num_layers:
+    type: int
+    values:
+    - 1
+    - 3
+run_command.txt: cd UdonPred uv run python run.py train --config-dir config_caid4/caid4_disprot_only
+  --output-dir checkpoints_caid4 --optimised-parameters-dir optimised_parameters_caid4

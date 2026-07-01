@@ -1,4 +1,5 @@
 biopython
+cmcrameri
 datasets
 ipykernel
 ipywidgets
@@ -25,4 +26,3 @@ transformers==4.54.0
 wandb
 scipy
 tqdm
-
