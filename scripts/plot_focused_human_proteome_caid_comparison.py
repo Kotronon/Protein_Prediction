@@ -24,12 +24,14 @@ os.environ.setdefault("MPLCONFIGDIR", "/private/tmp/matplotlib-cache")
 
 from cmcrameri import cm as cmcrameri_cm
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch, Rectangle
 
 from compare_predictors import compute_pairwise_agreements, load_predictions, maybe_negate_scores
 
 
 UDONPRED_MODELS = ["trizod", "chezod", "softdis", "atlas", "plddt", "disprot"]
 EXTERNAL_MODELS = ["PUNCH2_light", "DisoFLAG", "DisorderUnetLM", "DisPredict3"]
+CAID_TEXT_WHITE_MODELS = {"DisoFLAG", "DisorderUnetLM", "DisPredict3"}
 PREDICTOR_ORDER = UDONPRED_MODELS + EXTERNAL_MODELS
 NEGATED_PREDICTORS = {"chezod", "plddt"}
 EXTERNAL_PATHS = {
@@ -39,17 +41,33 @@ EXTERNAL_PATHS = {
     "DisPredict3": Path("Dispredict3_native/caid"),
 }
 DISPLAY_LABELS = {
+    "trizod": "TriZOD",
+    "chezod": "CheZOD",
+    "softdis": "SoftDis",
+    "atlas": "ATLAS",
+    "plddt": "plDDt",
+    "disprot": "DisProt",
     "PUNCH2_light": "PUNCH2-Light",
     "DisPredict3": "DisPredict3.0",
 }
-TITLE_FONTSIZE = 23
-SUPTITLE_FONTSIZE = 28
-TICK_FONTSIZE = 17
-COLORBAR_LABEL_FONTSIZE = 19
-COLORBAR_TICK_FONTSIZE = 16
-CELL_FONTSIZE = 25
-CELL_VALUE_FONTSIZE_WITH_SE = 25
-CELL_SE_FONTSIZE = 16
+TITLE_FONTSIZE = 30
+SUPTITLE_FONTSIZE = 36
+TICK_FONTSIZE = 24
+COLORBAR_LABEL_FONTSIZE = 24
+COLORBAR_TICK_FONTSIZE = 22
+CELL_FONTSIZE = 28
+CELL_VALUE_FONTSIZE_WITH_SE = 28
+CELL_SE_FONTSIZE = 21
+PRESENTATION_CELL_FONTSIZE = 21
+CLUSTER_LEGEND_FONTSIZE = 24
+UDON_GROUP_LABEL_FONTSIZE = 22
+TOP10_COLOR_MIN = 20
+TOP10_COLOR_MAX = 100
+UDON_CLUSTER_COLOR = "#005f73"
+PUNCH2_BRIDGE_COLOR = "#ee9b00"
+CAID_BLOCK_COLOR = "#ae2012"
+CLUSTER_HALO_COLOR = "white"
+UDON_GROUP_LABEL = "UdonPred"
 
 
 def display_labels(labels: pd.Index) -> list[str]:
@@ -57,6 +75,12 @@ def display_labels(labels: pd.Index) -> list[str]:
 
 
 BATLOW_CMAP = cmcrameri_cm.batlow
+
+
+def cell_text_color(row: str, col: str, value: float, threshold: float) -> str:
+    if row in CAID_TEXT_WHITE_MODELS or col in CAID_TEXT_WHITE_MODELS:
+        return "white"
+    return "white" if value < threshold else "black"
 
 
 def correlation_se(rho: float, n: float) -> float:
@@ -67,11 +91,14 @@ def correlation_se(rho: float, n: float) -> float:
     return float((1.0 - rho * rho) / math.sqrt(n - 3.0))
 
 
-def binomial_percent_se(percent: float, n: float) -> float:
+def binomial_percent_se(percent: float, n: float, population_n: float | None = None) -> float:
     if not math.isfinite(percent) or not math.isfinite(n) or n <= 0:
         return math.nan
     p = min(max(percent / 100.0, 0.0), 1.0)
-    return float(100.0 * math.sqrt(p * (1.0 - p) / n))
+    se = 100.0 * math.sqrt(p * (1.0 - p) / n)
+    if population_n is not None and math.isfinite(population_n) and population_n > 1 and n < population_n:
+        se *= math.sqrt((population_n - n) / (population_n - 1.0))
+    return float(se)
 
 
 def pairwise_matrix(pairwise: pd.DataFrame, value_column: str, n_column: str) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -113,7 +140,8 @@ def top10_matrices(top10_pairs: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFram
             continue
         value = float(row.top_10_percent_overlap)
         n = float(row.proteins_per_top_10_percent)
-        se = binomial_percent_se(value, n)
+        population_n = float(row.common_proteins)
+        se = binomial_percent_se(value, n, population_n)
         values.loc[left, right] = value
         values.loc[right, left] = value
         errors.loc[left, right] = se
@@ -177,13 +205,21 @@ def annotation(values: pd.DataFrame, errors: pd.DataFrame, value_fmt: str, error
             if not math.isfinite(value):
                 continue
             if math.isfinite(error):
-                annot.loc[row, col] = f"{value:{value_fmt}}\nSE {error:{error_fmt}}"
+                annot.loc[row, col] = f"{value:{value_fmt}}\n\u00b1 {error:{error_fmt}}"
             else:
                 annot.loc[row, col] = f"{value:{value_fmt}}"
     return annot
 
 
-def draw_cell_label(ax: plt.Axes, x: int, y: int, label: str, color: str, *, with_se: bool) -> None:
+def draw_cell_label(
+    ax: plt.Axes,
+    x: int,
+    y: int,
+    label: str,
+    color: str,
+    *,
+    with_se: bool,
+) -> None:
     if with_se and "\n" in label:
         value_label, se_label = label.split("\n", 1)
         ax.text(
@@ -217,6 +253,49 @@ def draw_cell_label(ax: plt.Axes, x: int, y: int, label: str, color: str, *, wit
     )
 
 
+def add_udonpred_axis_brackets(ax: plt.Axes) -> None:
+    group_size = len(UDONPRED_MODELS)
+    x_start = -0.5
+    x_end = group_size - 0.5
+    y_start = -0.5
+    y_end = group_size - 0.5
+    old_xlim = ax.get_xlim()
+    old_ylim = ax.get_ylim()
+
+    bracket_kwargs = {
+        "color": UDON_CLUSTER_COLOR,
+        "linewidth": 3.2,
+        "solid_capstyle": "butt",
+        "clip_on": False,
+        "zorder": 10,
+    }
+    ax.plot(
+        [x_start, x_start, x_end, x_end],
+        [-0.55, -0.78, -0.78, -0.55],
+        **bracket_kwargs,
+    )
+    ax.plot(
+        [-1.50, -1.85, -1.85, -1.50],
+        [y_start, y_start, y_end, y_end],
+        **bracket_kwargs,
+    )
+    ax.text(
+        -2.18,
+        (y_start + y_end) / 2,
+        UDON_GROUP_LABEL,
+        ha="center",
+        va="center",
+        rotation=90,
+        fontsize=UDON_GROUP_LABEL_FONTSIZE,
+        weight="bold",
+        color=UDON_CLUSTER_COLOR,
+        clip_on=False,
+    )
+
+    ax.set_xlim(old_xlim)
+    ax.set_ylim(old_ylim)
+
+
 def draw_heatmap(
     matrix: pd.DataFrame,
     path: Path,
@@ -227,7 +306,7 @@ def draw_heatmap(
     vmax: float,
     fmt: str = ".2f",
     annot: pd.DataFrame | bool = True,
-    figsize: tuple[float, float] = (17.0, 14.0),
+    figsize: tuple[float, float] = (19.5, 16.0),
 ) -> None:
     fig, ax = plt.subplots(figsize=figsize)
     image = ax.imshow(matrix.values.astype(float), cmap=BATLOW_CMAP, vmin=vmin, vmax=vmax)
@@ -259,14 +338,16 @@ def draw_heatmap(
             label = labels.loc[row, col]
             if not label:
                 continue
-            color = "white" if float(matrix.loc[row, col]) < threshold else "black"
+            value = float(matrix.loc[row, col])
+            color = cell_text_color(str(row), str(col), value, threshold)
             draw_cell_label(ax, j, i, label, color, with_se=with_se)
 
-    ax.set_title(title, fontsize=TITLE_FONTSIZE, weight="bold")
+    ax.set_title(title, fontsize=TITLE_FONTSIZE, weight="bold", pad=72)
     ax.set_xlabel("")
     ax.set_ylabel("")
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right", fontsize=TICK_FONTSIZE)
     plt.setp(ax.get_yticklabels(), rotation=0, fontsize=TICK_FONTSIZE)
+    add_udonpred_axis_brackets(ax)
     fig.tight_layout()
     fig.savefig(path, dpi=240, bbox_inches="tight")
     plt.close(fig)
@@ -291,7 +372,7 @@ def draw_spearman_pair(
 
     vmin = min(float(np.nanmin(residue_values.values)), float(np.nanmin(protein_values.values)))
 
-    fig, axes = plt.subplots(1, 2, figsize=(34.0, 15.0))
+    fig, axes = plt.subplots(1, 2, figsize=(38.0, 17.0))
     for ax, matrix, annot, title in [
         (axes[0], residue_values, annot_residue, "Residue-level Spearman"),
         (axes[1], protein_values, annot_protein, "Protein-level Spearman"),
@@ -321,14 +402,16 @@ def draw_spearman_pair(
                 label = labels.loc[row, col]
                 if not label:
                     continue
-                color = "white" if float(matrix.loc[row, col]) < threshold else "black"
+                value = float(matrix.loc[row, col])
+                color = cell_text_color(str(row), str(col), value, threshold)
                 draw_cell_label(ax, j, i, label, color, with_se=with_se_labels)
 
-        ax.set_title(title, fontsize=TITLE_FONTSIZE, weight="bold")
+        ax.set_title(title, fontsize=TITLE_FONTSIZE, weight="bold", pad=62)
         ax.set_xlabel("")
         ax.set_ylabel("")
         plt.setp(ax.get_xticklabels(), rotation=45, ha="right", fontsize=TICK_FONTSIZE)
         plt.setp(ax.get_yticklabels(), rotation=0, fontsize=TICK_FONTSIZE)
+        add_udonpred_axis_brackets(ax)
 
     fig.suptitle(
         "Human Proteome: UdonPred vs PUNCH2-Light, DisoFLAG, DisorderUnetLM, DisPredict3.0",
@@ -337,6 +420,260 @@ def draw_spearman_pair(
         y=1.02,
     )
     fig.tight_layout()
+    fig.savefig(path, dpi=240, bbox_inches="tight")
+    plt.close(fig)
+
+
+def draw_presentation_cluster_heatmap(protein_values: pd.DataFrame, path: Path) -> None:
+    fig = plt.figure(figsize=(27.0, 17.5))
+    grid = fig.add_gridspec(1, 3, width_ratios=[1.0, 0.045, 0.38], wspace=0.16)
+    ax = fig.add_subplot(grid[0, 0])
+    cax = fig.add_subplot(grid[0, 1])
+    legend_ax = fig.add_subplot(grid[0, 2])
+    legend_ax.axis("off")
+
+    vmin = float(np.nanmin(protein_values.values))
+    image = ax.imshow(protein_values.values.astype(float), cmap=BATLOW_CMAP, vmin=vmin, vmax=1.0)
+    cbar = fig.colorbar(image, cax=cax)
+    cbar.set_label("Protein-level Spearman rho", fontsize=COLORBAR_LABEL_FONTSIZE)
+    cbar.ax.yaxis.set_label_position("left")
+    cbar.ax.tick_params(labelsize=COLORBAR_TICK_FONTSIZE)
+
+    ax.set_xticks(np.arange(len(protein_values.columns)))
+    ax.set_yticks(np.arange(len(protein_values.index)))
+    ax.set_xticklabels(display_labels(protein_values.columns))
+    ax.set_yticklabels(display_labels(protein_values.index))
+    ax.set_xticks(np.arange(-0.5, len(protein_values.columns), 1), minor=True)
+    ax.set_yticks(np.arange(-0.5, len(protein_values.index), 1), minor=True)
+    ax.grid(which="minor", color="white", linestyle="-", linewidth=0.55)
+    ax.tick_params(which="minor", bottom=False, left=False)
+
+    threshold = vmin + 0.55 * (1.0 - vmin)
+    for i, row in enumerate(protein_values.index):
+        for j, col in enumerate(protein_values.columns):
+            value = float(protein_values.loc[row, col])
+            color = cell_text_color(str(row), str(col), value, threshold)
+            draw_cell_label(ax, j, i, f"{value:.2f}", color, with_se=False)
+
+    add_presentation_overlays(ax, linewidth=4.5)
+
+    legend_handles = [
+        Patch(facecolor="none", edgecolor=UDON_CLUSTER_COLOR, linewidth=4, label="UdonPred cluster"),
+        Patch(
+            facecolor=PUNCH2_BRIDGE_COLOR,
+            edgecolor=PUNCH2_BRIDGE_COLOR,
+            alpha=0.22,
+            linestyle="dashed",
+            label="PUNCH2-Light bridge",
+        ),
+        Patch(
+            facecolor="none",
+            edgecolor=CAID_BLOCK_COLOR,
+            linewidth=4,
+            linestyle="dashdot",
+            label="CAID-style block",
+        ),
+    ]
+    legend_ax.legend(
+        handles=legend_handles,
+        loc="center left",
+        ncol=1,
+        frameon=False,
+        fontsize=CLUSTER_LEGEND_FONTSIZE,
+        borderaxespad=0,
+        handlelength=1.6,
+        labelspacing=1.3,
+    )
+
+    ax.set_title(
+        "Protein-Level Agreement: Three Main Patterns",
+        fontsize=TITLE_FONTSIZE + 2,
+        weight="bold",
+        pad=64,
+    )
+    ax.set_xlabel("")
+    ax.set_ylabel("")
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", fontsize=TICK_FONTSIZE)
+    plt.setp(ax.get_yticklabels(), rotation=0, fontsize=TICK_FONTSIZE)
+    ax.set_xlim(-0.5, len(protein_values.columns) - 0.5)
+    ax.set_ylim(len(protein_values.index) - 0.5, -0.5)
+    add_udonpred_axis_brackets(ax)
+    fig.subplots_adjust(left=0.07, right=0.98, bottom=0.16, top=0.90)
+    fig.savefig(path, dpi=240, bbox_inches="tight")
+    plt.close(fig)
+
+
+def add_haloed_rectangle(
+    ax: plt.Axes,
+    xy: tuple[float, float],
+    width: float,
+    height: float,
+    *,
+    edgecolor: str,
+    linewidth: float,
+    linestyle: str = "solid",
+) -> None:
+    ax.add_patch(
+        Rectangle(
+            xy,
+            width,
+            height,
+            fill=False,
+            edgecolor=CLUSTER_HALO_COLOR,
+            linewidth=linewidth + 3.0,
+            linestyle=linestyle,
+            zorder=5,
+        )
+    )
+    ax.add_patch(
+        Rectangle(
+            xy,
+            width,
+            height,
+            fill=False,
+            edgecolor=edgecolor,
+            linewidth=linewidth,
+            linestyle=linestyle,
+            zorder=6,
+        )
+    )
+
+
+def add_presentation_overlays(ax: plt.Axes, *, linewidth: float = 4.0) -> None:
+    ax.axhspan(5.5, 6.5, color=PUNCH2_BRIDGE_COLOR, alpha=0.14, zorder=2)
+    ax.axvspan(5.5, 6.5, color=PUNCH2_BRIDGE_COLOR, alpha=0.14, zorder=2)
+    add_haloed_rectangle(
+        ax,
+        (-0.5, -0.5),
+        6,
+        6,
+        edgecolor=UDON_CLUSTER_COLOR,
+        linewidth=linewidth,
+        linestyle="solid",
+    )
+    add_haloed_rectangle(
+        ax,
+        (-0.5, 5.5),
+        10,
+        1,
+        edgecolor=PUNCH2_BRIDGE_COLOR,
+        linewidth=linewidth - 0.5,
+        linestyle="dashed",
+    )
+    add_haloed_rectangle(
+        ax,
+        (5.5, -0.5),
+        1,
+        10,
+        edgecolor=PUNCH2_BRIDGE_COLOR,
+        linewidth=linewidth - 0.5,
+        linestyle="dashed",
+    )
+    add_haloed_rectangle(
+        ax,
+        (6.5, 6.5),
+        3,
+        3,
+        edgecolor=CAID_BLOCK_COLOR,
+        linewidth=linewidth,
+        linestyle="dashdot",
+    )
+
+
+def draw_presentation_dual_cluster_heatmaps(
+    residue_values: pd.DataFrame,
+    protein_values: pd.DataFrame,
+    path: Path,
+) -> None:
+    matrices = [
+        ("Residue-level Spearman", residue_values),
+        ("Protein-level Spearman", protein_values),
+    ]
+    vmin = min(float(np.nanmin(residue_values.values)), float(np.nanmin(protein_values.values)))
+    fig = plt.figure(figsize=(42.0, 18.5))
+    grid = fig.add_gridspec(1, 4, width_ratios=[1.0, 1.0, 0.045, 0.35], wspace=0.18)
+    axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[0, 1])]
+    cax = fig.add_subplot(grid[0, 2])
+    legend_ax = fig.add_subplot(grid[0, 3])
+    legend_ax.axis("off")
+
+    image = None
+    for ax, (title, matrix) in zip(axes, matrices):
+        image = ax.imshow(matrix.values.astype(float), cmap=BATLOW_CMAP, vmin=vmin, vmax=1.0)
+        ax.set_xticks(np.arange(len(matrix.columns)))
+        ax.set_yticks(np.arange(len(matrix.index)))
+        ax.set_xticklabels(display_labels(matrix.columns))
+        ax.set_yticklabels(display_labels(matrix.index))
+        ax.set_xticks(np.arange(-0.5, len(matrix.columns), 1), minor=True)
+        ax.set_yticks(np.arange(-0.5, len(matrix.index), 1), minor=True)
+        ax.grid(which="minor", color="white", linestyle="-", linewidth=0.45)
+        ax.tick_params(which="minor", bottom=False, left=False)
+
+        threshold = vmin + 0.55 * (1.0 - vmin)
+        for i, row in enumerate(matrix.index):
+            for j, col in enumerate(matrix.columns):
+                value = float(matrix.loc[row, col])
+                color = cell_text_color(str(row), str(col), value, threshold)
+                ax.text(
+                    j,
+                    i,
+                    f"{value:.2f}",
+                    ha="center",
+                    va="center",
+                    fontsize=PRESENTATION_CELL_FONTSIZE,
+                    color=color,
+                )
+
+        add_presentation_overlays(ax, linewidth=4.0)
+        ax.set_title(title, fontsize=TITLE_FONTSIZE, weight="bold", pad=54)
+        ax.set_xlabel("")
+        ax.set_ylabel("")
+        ax.set_xlim(-0.5, len(matrix.columns) - 0.5)
+        ax.set_ylim(len(matrix.index) - 0.5, -0.5)
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right", fontsize=TICK_FONTSIZE)
+        plt.setp(ax.get_yticklabels(), rotation=0, fontsize=TICK_FONTSIZE)
+        add_udonpred_axis_brackets(ax)
+
+    assert image is not None
+    cbar = fig.colorbar(image, cax=cax)
+    cbar.set_label("Spearman rho", fontsize=COLORBAR_LABEL_FONTSIZE)
+    cbar.ax.yaxis.set_label_position("left")
+    cbar.ax.tick_params(labelsize=COLORBAR_TICK_FONTSIZE)
+
+    legend_handles = [
+        Patch(facecolor="none", edgecolor=UDON_CLUSTER_COLOR, linewidth=4, label="UdonPred cluster"),
+        Patch(
+            facecolor=PUNCH2_BRIDGE_COLOR,
+            edgecolor=PUNCH2_BRIDGE_COLOR,
+            alpha=0.22,
+            linestyle="dashed",
+            label="PUNCH2-Light bridge",
+        ),
+        Patch(
+            facecolor="none",
+            edgecolor=CAID_BLOCK_COLOR,
+            linewidth=4,
+            linestyle="dashdot",
+            label="CAID-style block",
+        ),
+    ]
+    legend_ax.legend(
+        handles=legend_handles,
+        loc="center left",
+        ncol=1,
+        frameon=False,
+        fontsize=CLUSTER_LEGEND_FONTSIZE,
+        borderaxespad=0,
+        handlelength=1.6,
+        labelspacing=1.3,
+    )
+    fig.suptitle(
+        "Agreement Structure at Residue and Protein Level",
+        fontsize=SUPTITLE_FONTSIZE,
+        weight="bold",
+        y=0.965,
+    )
+    fig.subplots_adjust(left=0.05, right=0.985, bottom=0.18, top=0.88)
     fig.savefig(path, dpi=240, bbox_inches="tight")
     plt.close(fig)
 
@@ -383,6 +720,7 @@ def write_outputs(
         lambda row: binomial_percent_se(
             float(row["top_10_percent_overlap"]),
             float(row["proteins_per_top_10_percent"]),
+            float(row["common_proteins"]),
         ),
         axis=1,
     )
@@ -409,8 +747,8 @@ def write_outputs(
         output_dir / "top10_protein_overlap_without_se.png",
         title="Human Proteome: top-10% most disorder-prone protein overlap",
         cbar_label="Shared top-10% proteins (%)",
-        vmin=0,
-        vmax=100,
+        vmin=TOP10_COLOR_MIN,
+        vmax=TOP10_COLOR_MAX,
         fmt=".0f",
         annot=True,
     )
@@ -419,9 +757,18 @@ def write_outputs(
         output_dir / "top10_protein_overlap_with_se.png",
         title="Human Proteome: top-10% most disorder-prone protein overlap",
         cbar_label="Shared top-10% proteins (%)",
-        vmin=0,
-        vmax=100,
+        vmin=TOP10_COLOR_MIN,
+        vmax=TOP10_COLOR_MAX,
         annot=annotation(top10_values, top10_errors, ".0f", ".1f"),
+    )
+    draw_presentation_cluster_heatmap(
+        protein_values,
+        output_dir / "presentation_cluster_annotated_protein_spearman.png",
+    )
+    draw_presentation_dual_cluster_heatmaps(
+        residue_values,
+        protein_values,
+        output_dir / "presentation_cluster_annotated_spearman_heatmaps.png",
     )
 
 
